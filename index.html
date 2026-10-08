@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>H Hospitality Group – Quotations</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{--bg:#eef3f3;--card:#fff;--ink:#12302f;--mute:#5d7776;--line:#d3e0df;--brand:#0f5c59;--brand-ink:#fff;--sun:#e8a93a;--bad:#b3392f;--ok:#237a4b;--warn:#a86a00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1b1b;--card:#142828;--ink:#e6f0ef;--mute:#8fadab;--line:#264240;--brand:#3fb3ad;--brand-ink:#082322;--sun:#e8a93a;--bad:#ff8b7f;--ok:#6fd49b;--warn:#f0b755}}
+:root[data-theme="dark"]{--bg:#0d1b1b;--card:#142828;--ink:#e6f0ef;--mute:#8fadab;--line:#264240;--brand:#3fb3ad;--brand-ink:#082322;--sun:#e8a93a;--bad:#ff8b7f;--ok:#6fd49b;--warn:#f0b755}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,sans-serif}
+header{background:var(--brand);color:var(--brand-ink);padding:18px 20px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:end}
+h1,h2{font-family:'Bricolage Grotesque',Georgia,serif;margin:0}h1{font-size:26px}h2{font-size:19px;margin-bottom:12px}
+.clock{font-weight:500;text-align:right}.clock small{display:block;opacity:.8;font-weight:400}
+main{max-width:1100px;margin:0 auto;padding:18px 14px 60px;display:grid;gap:18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label{display:block;font-size:13px;color:var(--mute);font-weight:500}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:3px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
+textarea{min-height:120px;resize:vertical}
+.prop{border-left:5px solid var(--sun)}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:1020px}
+th{text-align:left;font-size:13px;color:var(--mute);font-weight:500;padding:6px;border-bottom:2px solid var(--line)}
+td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:middle}td input,td select{margin:0}
+td.amt{text-align:right;font-weight:600;white-space:nowrap;padding-right:8px}
+.total{display:flex;justify-content:space-between;align-items:center;padding:12px 8px;font-size:18px;font-weight:600}
+.total span:last-child{font-family:'Bricolage Grotesque',serif;font-size:24px}
+button{font:inherit;font-weight:500;border-radius:6px;border:1px solid var(--brand);background:var(--card);color:var(--brand);padding:8px 14px;cursor:pointer}
+button.p{background:var(--brand);color:var(--brand-ink)}button.d{border-color:var(--bad);color:var(--bad)}button.s{padding:4px 9px;font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}.mute{color:var(--mute)}
+.acts{display:flex;gap:5px;flex-wrap:wrap}
+[hidden]{display:none!important}
+tr.off td:not(:last-child){opacity:.4}tr.off td:first-child{text-decoration:line-through}
+:root{--over:#6b5bd6}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--over:#a99cff}}:root[data-theme="dark"]{--over:#a99cff}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.kpi{border:1px solid var(--line);border-left:5px solid;border-radius:8px;padding:10px 12px}.kpi .n{font:700 30px 'Bricolage Grotesque',serif}
+.brow{display:flex;align-items:center;gap:10px;margin:6px 0}.bl{width:190px;font-size:13px;flex:none}.bt{flex:1;display:flex;height:16px;background:var(--bg);border-radius:4px;overflow:hidden}.bt i{display:block;height:100%}
+.s_paid{background:var(--ok)}.s_pending{background:var(--sun)}.s_overdue{background:var(--over)}.s_failed{background:var(--bad)}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:15;display:grid;place-items:center;padding:16px}.mcard{background:var(--card);width:min(820px,100%);max-height:90vh;overflow:auto;border-radius:10px;padding:18px}pre{white-space:pre-wrap;font:inherit;margin:0 0 8px}h3{margin:12px 0 4px;font-size:15px}textarea[readonly]{opacity:.7}.who{display:flex;gap:10px;align-items:center}
+#login{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:20;padding:20px}
+#toast{z-index:30;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;display:none;z-index:9}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>H Hospitality Group</h1><div>Quotation desk · 9 properties</div></div>
+  <div class="clock"><span id="clk"></span><small>Issue date &amp; time are stamped when you save</small></div>
+  <div class="who" id="who" hidden><span id="whoname"></span><button class="s" id="logout">Sign out</button></div>
+</header>
+<div id="login"><section style="width:min(380px,100%)"><h1 style="color:var(--brand)">H Hospitality Group</h1><p class="mute" style="margin:4px 0 14px">Sign in to the quotation desk</p>
+<label>Username<input id="lu" autocomplete="username"></label><label style="margin-top:10px">Password<input id="lp" type="password" autocomplete="current-password"></label>
+<p id="lerr" class="bad" style="min-height:20px;margin:8px 0"></p><button class="p" id="lbtn" disabled style="width:100%">Sign in</button>
+<label style="display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--ink)"><input type="checkbox" id="fg" style="width:auto;margin:0"> Forgot password</label>
+<div id="fgbox" hidden><label>Registered email<input id="fe" type="email"></label><button id="fbtn" style="width:100%;margin-top:8px">Request password reset</button></div></section></div>
+<div id="pw" hidden style="position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:20;padding:20px"><section style="width:min(380px,100%)"><h2>Set your new password</h2><p class="mute" style="margin:4px 0 12px">Your administrator gave you a temporary password. Create your own to continue.</p>
+<label>New password<input id="np" type="password" autocomplete="new-password"></label><label style="margin-top:10px">Confirm new password<input id="cp" type="password" autocomplete="new-password"></label>
+<p id="perr" class="bad" style="min-height:20px;margin:8px 0"></p><button class="p" id="pbtn" style="width:100%">Save password</button><button id="pcancel" style="width:100%;margin-top:8px">Cancel</button></section></div>
+<main id="app" hidden>
+<section id="dash"><h2>Dashboard</h2><div class="kpis" id="kpis"></div><h2 style="margin:20px 0 6px;font-size:16px">Quotations per property</h2><div id="chart"></div>
+<div class="mute" style="font-size:12.5px;margin-top:8px"><i class="s_paid" style="display:inline-block;width:10px;height:10px"></i> Paid &nbsp; <i class="s_pending" style="display:inline-block;width:10px;height:10px"></i> Pending &nbsp; <i class="s_overdue" style="display:inline-block;width:10px;height:10px"></i> Overdue &nbsp; <i class="s_failed" style="display:inline-block;width:10px;height:10px"></i> Failed</div></section>
+<section class="prop">
+  <h2>1. Property &amp; guest</h2>
+  <div class="grid">
+    <label>Property<select id="prop"></select></label>
+    <label>Agent name<input id="agent" placeholder="Your name"></label>
+    <label>Booking type<select id="btype"><option>Walk-in guest</option><option>FIT</option><option>Travel agency</option></select></label>
+    <label id="agwrap" hidden>Travel agency<select id="agency"></select></label>
+    <label>Source<select id="source"></select></label>
+    <label>Guest / client name<input id="client" placeholder="Full name"></label>
+    <label>Client email<input id="email" type="email" placeholder="name@email.com"></label>
+    <label>Check-in<input id="cin" type="date"></label>
+    <label>Check-out<input id="cout" type="date"></label>
+    <div id="billto" hidden style="grid-column:1/-1;border:1px dashed var(--line);border-radius:6px;padding:10px"></div>
+  </div>
+</section>
+
+<section>
+  <h2>2. Quotation items</h2>
+  <div class="scroll"><table>
+    <thead><tr><th style="width:150px">Type</th><th>Description</th><th style="width:70px">Qty</th><th style="width:120px">Unit price (PHP)</th><th style="width:110px;text-align:right">Amount</th><th style="width:80px">Discount?</th><th style="width:120px">Discounted rate</th><th style="width:110px;text-align:right">Net amount</th><th style="width:50px"></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <div class="bar"><button id="add">+ Add row</button></div>
+  <div class="total"><span>Total</span><span id="total">PHP 0.00</span></div>
+  <datalist id="sug"></datalist>
+</section>
+
+<section>
+  <h2>3. Option date</h2>
+  <div class="grid">
+    <label>Valid for<select id="days"></select></label>
+    <label>Option date (due)<input id="due" type="date"></label>
+  </div>
+  <p class="mute" style="margin:8px 0 0">Defaults to 2 days from today. After the option date, unpaid quotations are flagged for follow-up.</p>
+</section>
+
+<section>
+  <h2>4. Inclusions, terms &amp; policies</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+    <label>Amenities / inclusions<textarea id="inc"></textarea></label>
+    <label>Terms &amp; conditions<textarea id="terms"></textarea></label>
+    <label>Hotel policies<textarea id="pol"></textarea></label>
+  </div>
+  <div class="bar">
+    <button class="p" id="savepdf">Save &amp; generate PDF</button>
+    <button id="save">Save only</button>
+    <button id="reset">New quotation</button>
+    <button class="adm" id="savedef" hidden>Save terms &amp; policies as default</button>
+  </div>
+</section>
+
+<section>
+  <h2>Quotation records</h2>
+  <div class="scroll"><table style="min-width:1200px">
+    <thead><tr><th>Ref</th><th>Issued</th><th>Property / client</th><th>Source</th><th>Prepared by</th><th style="text-align:right">Total</th><th>Option date</th><th>Due status</th><th>Email</th><th>Payment</th><th>Actions</th></tr></thead>
+    <tbody id="list"></tbody>
+  </table></div>
+  <p id="empty" class="mute">No quotations yet. Fill in the form above and save.</p>
+</section>
+<section class="adm" hidden><h2>Users <span class="mute" id="ucount" style="font-size:14px;font-family:Figtree"></span></h2>
+<div class="grid"><label>Full name<input id="un"></label><label>Username<input id="uu"></label><label>Email (required)<input id="ue" type="email"></label><label>Temporary password<input id="up"></label></div>
+<div class="bar"><button class="p" id="uadd">Add / update user</button></div><p class="mute" style="margin:6px 0">The agent signs in with the temporary password, then must create their own. Passwords are never shown, even to the admin; if someone forgets theirs, set a new temporary password. Leave the password blank to update name or email only. 1 admin, up to 8 agents.</p>
+<div class="scroll"><table style="min-width:420px"><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="ulist"></tbody></table></div></section>
+<section class="adm" hidden><h2>Travel agencies (billing details)</h2><div class="grid"><label>Agency name<input id="agn"></label><label>Email<input id="age" type="email"></label><label>Address<input id="aga"></label><label>TIN<input id="agt"></label></div>
+<div class="bar"><button class="p" id="agsave">Save agency</button></div><div class="scroll"><table style="min-width:640px"><thead><tr><th>Agency</th><th>Email</th><th>Address</th><th>TIN</th><th></th></tr></thead><tbody id="aglist"></tbody></table></div></section>
+<section class="adm" hidden><h2>Property details (shown in PDF header)</h2><div class="grid"><label>Property<select id="pp"></select></label><label>Address<input id="pa"></label><label>Email<input id="pe"></label><label>Contact number<input id="pt"></label></div><div class="bar"><button class="p" id="psave">Save property details</button></div></section>
+<section class="adm" hidden><h2>Activity log</h2><div class="scroll"><table style="min-width:760px"><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Ref</th><th>Detail</th></tr></thead><tbody id="loglist"></tbody></table></div></section>
+</main>
+<div id="modal" hidden><div class="mcard"><div style="text-align:right"><button class="s" id="mclose">Close</button></div><div id="mbody"></div></div></div>
+<div id="toast"></div>
+
+<script>
+const PROPS=["S Resort","H Hotel","Piece Lio","Z Garden Hotel","J Boutique Hotel","Nacpan Beach Resort","Nacpan Beach Villa","Nacpan Beach Glamping","Villa V"];
+const GRP='H Hospitality Group';
+const TYPES=["Hotel / Room","Transfer","Breakfast","Meals","Activity / Tour","Extra bed","Other"];
+const SUG={"Hotel / Room":["Deluxe Room – per night","Family Room – per night","Villa – per night","Glamping Tent – per night"],"Transfer":["Airport – hotel transfer (one way)","Airport – hotel round trip","Van rental – per day"],"Breakfast":["Breakfast for 2 – per day","Buffet breakfast – per pax"],"Meals":["Lunch – per pax","Dinner – per pax","Set meal package – per pax"],"Activity / Tour":["Island hopping – per pax","Sunset cruise – per pax"],"Extra bed":["Extra bed – per night"],"Other":["Early check-in","Late check-out","Celebration setup"]};
+const INC="• Daily breakfast for registered guests\n• Free Wi-Fi in rooms and common areas\n• Access to swimming pool and beachfront\n• Air-conditioned rooms with private bathroom\n• Welcome drink on arrival\n• Free parking (subject to availability)";
+const TERMS="1. This quotation is valid until the option date shown. Rates and availability are not guaranteed after that date.\n2. A 50% down payment is required to confirm the booking; the balance is due 7 days before arrival.\n3. Rates are in Philippine Peso (PHP) and subject to change without prior notice.\n4. Bookings are confirmed only upon receipt of payment and written confirmation.";
+const POL="• Check-in 2:00 PM · Check-out 12:00 NN\n• Cancellation 14 days or more before arrival: full refund less bank charges; 7–13 days: 50% charge; under 7 days or no-show: no refund\n• Valid ID required upon check-in\n• No smoking inside rooms; damages will be charged to the guest\n• Outside food and drinks are subject to corkage";
+let DEF={terms:TERMS,pol:POL},propInfo={};const PD={address:'Address – set by admin',email:'email@example.com',phone:'+63 000 000 0000'};const pinfo=n=>({...PD,...(propInfo[n]||{})});
+const $=id=>document.getElementById(id);
+const fmt=n=>'PHP '+Number(n||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let rows=[],editId=null,db=null,toastT,me=null,logsOn=false;const D={quotations:[],users:[],logs:[],settings:[]};
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',2800)}
+
+/* ---------- clock ---------- */
+const tick=()=>$('clk').textContent=new Date().toLocaleString('en-PH',{dateStyle:'full',timeStyle:'medium'});
+tick();setInterval(tick,1000);
+
+/* ---------- setup ---------- */
+const ALLP=[GRP,...PROPS];$('prop').innerHTML=ALLP.map(p=>`<option value="${p}">${p===GRP?GRP+' – multiple hotel stay':p}</option>`).join('');
+$('source').innerHTML=['Email','Phone','Walk-In','WhatsApp','Viber','Meta'].map(p=>`<option>${p}</option>`).join('');
+$('days').innerHTML=[1,2,3,5,7,14,30].map(n=>`<option value="${n}"${n==2?' selected':''}>${n} day${n>1?'s':''}</option>`).join('');
+$('days').onchange=()=>$('due').value=addDays(+$('days').value);
+function syncDates(){const ci=$('cin').value,co=$('cout');co.disabled=!ci;if(!ci){co.value='';co.removeAttribute('min');return}
+  const d=new Date(ci+'T00:00:00');d.setDate(d.getDate()+1);const m=iso(d);co.min=m;if(co.value&&co.value<m)co.value=''}
+$('cin').onchange=()=>{syncDates();applyNights()};$('cout').onchange=applyNights;
+$('prop').onchange=()=>{updSug();};
+function updSug(){const p=$('prop').value;$('sug').innerHTML=Object.values(SUG).flat().map(s=>`<option value="${esc(s)}">`).join('')+(p===GRP?PROPS.map(x=>`<option value="${esc(x)} – room, per night">`).join(''):`<option value="${esc(p)} – room, per night">`)}
+
+/* ---------- rows ---------- */
+const eff=r=>r.disc?r.qty*(r.drate||0):r.qty*r.price;
+const NIGHT=['Hotel / Room','Extra bed','Breakfast'];
+function nights(){const a=$('cin').value,b=$('cout').value;return a&&b&&b>a?Math.round((new Date(b)-new Date(a))/864e5):1}
+function applyNights(){rows.forEach(r=>{if(!r.qm&&NIGHT.includes(r.type))r.qty=nights()});renderRows()}
+function newRow(){return{type:TYPES[0],desc:'',qty:nights(),price:0,disc:false,drate:0}}
+function renderRows(){
+  $('rows').innerHTML=rows.map((r,i)=>`<tr>
+  <td><select data-i="${i}" data-k="type">${TYPES.map(t=>`<option${t===r.type?' selected':''}>${t}</option>`).join('')}</select></td>
+  <td><input list="sug" data-i="${i}" data-k="desc" value="${esc(r.desc)}" placeholder="Pick a suggestion or type"></td>
+  <td><input type="number" min="0" step="1" data-i="${i}" data-k="qty" value="${r.qty}"></td>
+  <td><input type="number" min="0" step="0.01" data-i="${i}" data-k="price" value="${r.price}"></td>
+  <td class="amt" id="a${i}">${fmt(r.qty*r.price)}</td>
+  <td style="text-align:center"><input type="checkbox" style="width:auto" aria-label="Apply discount" data-i="${i}" data-k="disc"${r.disc?' checked':''}></td>
+  <td><input type="number" min="0" step="0.01" data-i="${i}" data-k="drate" value="${r.drate||0}"${r.disc?'':' disabled'}></td>
+  <td class="amt" id="n${i}">${fmt(eff(r))}</td>
+  <td><button class="d s" data-del="${i}" title="Delete row" aria-label="Delete row">✕</button></td></tr>`).join('');
+  calc();
+}
+function calc(){rows.forEach((r,i)=>{const e=$('a'+i),n=$('n'+i);if(e)e.textContent=fmt(r.qty*r.price);if(n)n.textContent=fmt(eff(r))});$('total').textContent=fmt(rows.reduce((s,r)=>s+eff(r),0))}
+$('rows').addEventListener('input',e=>{const i=e.target.dataset.i;if(i==null)return;const k=e.target.dataset.k;if(k==='disc'){rows[i].disc=e.target.checked;if(e.target.checked&&!rows[i].drate)rows[i].drate=rows[i].price;renderRows();return}
+  if(k==='qty')rows[i].qm=true;
+  rows[i][k]=(k==='qty'||k==='price'||k==='drate')?(parseFloat(e.target.value)||0):e.target.value;calc()});
+$('rows').addEventListener('change',e=>{if(e.target.dataset.k==='type'){const r=rows[e.target.dataset.i];if(!r.qm)r.qty=NIGHT.includes(r.type)?nights():1;if(!r.desc)r.desc=SUG[r.type][0];renderRows()}});
+$('rows').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(!d)return;if(rows.length===1){rows=[newRow()]}else rows.splice(+d.dataset.del,1);renderRows()});
+$('add').onclick=()=>{rows.push(newRow());renderRows()};
+
+/* ---------- form ---------- */
+function resetForm(){editId=null;rows=[newRow()];['agent','client','email','cin','cout'].forEach(k=>$(k).value=(k==='agent'?(me?me.name:''):''));
+  $('source').value='Email';$('btype').value='Walk-in guest';$('agency').value='';$('email').dataset.auto='';toggleType();syncDates();$('days').value=2;$('due').value=addDays(2);$('inc').value=INC;$('terms').value=DEF.terms;$('pol').value=DEF.pol;updSug();renderRows()}
+$('reset').onclick=resetForm;
+function nextRef(){const d=new Date();const s=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  const n=D.quotations.filter(r=>r.ref.includes('-'+s+'-')).length+1;return `HHG-${s}-${String(n).padStart(3,'0')}`}
+function collect(){
+  const items=rows.filter(r=>r.desc.trim()||r.price>0).map(r=>({...r}));
+  if(!$('client').value.trim()){toast('Enter the guest / client name');return null}
+  if(!items.length){toast('Add at least one item');return null}
+  const isAg=$('btype').value==='Travel agency',ag=isAg?AG().find(x=>x.id===$('agency').value):null;if(isAg&&!ag){toast('Select the travel agency');return null}
+  const old=D.quotations.find(r=>r.id===editId);
+  return{id:editId||('q'+Date.now()),ref:old?.ref||nextRef(),issued:old?.issued||new Date().toISOString(),property:$('prop').value,agent:$('agent').value.trim(),
+    client:$('client').value.trim(),email:$('email').value.trim(),checkin:$('cin').value,checkout:$('cout').value,items,
+    total:items.reduce((s,r)=>s+eff(r),0),source:$('source').value,btype:$('btype').value,agencyId:ag?ag.id:'',agencyName:ag?ag.name:'',agencyEmail:ag?ag.email:'',agencyAddress:ag?ag.address:'',agencyTin:ag?ag.tin:'',optionDate:$('due').value,inclusions:$('inc').value,terms:$('terms').value,policies:$('pol').value,
+    emailStatus:old?.emailStatus||'Not sent',payment:old?.payment||'Pending'}
+}
+async function persist(q){await put('quotations',q);renderList()}
+async function doSave(){const q=collect();if(!q)return null;const isNew=!D.quotations.some(r=>r.id===q.id);await persist(q);editId=q.id;addLog(isNew?'Created quotation':'Edited quotation',q.ref,q.client+' · '+fmt(q.total));toast('Saved '+q.ref);return q}
+$('save').onclick=doSave;
+$('savepdf').onclick=async()=>{const q=await doSave();if(q)makePdf(q)};
+
+/* ---------- status ---------- */
+const dayDiff=s=>Math.round((new Date(s+'T00:00:00')-new Date(iso(new Date())+'T00:00:00'))/864e5);
+function dueInfo(q){if(q.payment==='Paid')return['Paid','ok'];const n=dayDiff(q.optionDate);
+  if(n<0)return['Overdue – follow up','bad'];if(n===0)return['Due today','warn'];return[`Active · ${n} day${n>1?'s':''} left`,'ok']}
+function payInfo(q){if(['Pending','Sent'].includes(q.payment)&&dayDiff(q.optionDate)<0)return['Overdue','bad'];
+  return[q.payment,{Paid:'ok',Failed:'bad',Sent:'warn',Pending:'mute'}[q.payment]]}
+
+/* ---------- list ---------- */
+function renderList(){renderDash();
+  $('empty').style.display=D.quotations.length?'none':'block';
+  $('list').innerHTML=D.quotations.map(q=>{const[d,dc]=dueInfo(q),[p,pc]=payInfo(q);
+  return`<tr><td><b>${q.ref}</b></td><td>${new Date(q.issued).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'})}</td>
+  <td>${esc(q.property)}<br><span class="mute">${esc(q.client)}<br>${esc(q.btype||'Walk-in guest')}${q.agencyName?' · '+esc(q.agencyName):''}</span></td><td>${esc(q.source||'-')}</td><td>${esc(q.agent||'-')}</td><td class="amt">${fmt(q.total)}</td><td>${q.optionDate}</td>
+  <td><span class="tag ${dc}">${d}</span></td>
+  <td><span class="tag ${q.emailStatus==='Email sent'?'ok':'mute'}">${q.emailStatus}</span></td>
+  <td><span class="tag ${pc}">${p}</span><br><select data-pay="${q.id}" style="margin-top:4px;font-size:13px">${['Pending','Sent','Paid','Failed'].map(s=>`<option${s===q.payment?' selected':''}>${s}</option>`).join('')}</select></td>
+  <td><div class="acts"><button class="s" data-a="view" data-id="${q.id}">View</button><button class="s" data-a="pdf" data-id="${q.id}">PDF</button><button class="s" data-a="mail" data-id="${q.id}">Email</button><button class="s" data-a="edit" data-id="${q.id}">Edit</button>${q.payment==='Paid'?`<button class="s p" data-a="conf" data-id="${q.id}">Confirmation</button>`:''}${me&&me.role==='admin'?`<button class="s d" data-a="del" data-id="${q.id}">Delete</button>`:''}</div></td></tr>`}).join('')}
+$('list').addEventListener('change',async e=>{const id=e.target.dataset.pay;if(!id)return;const q=D.quotations.find(r=>r.id===id);addLog('Payment status',q.ref,q.payment+' → '+e.target.value);q.payment=e.target.value;await persist(q)});
+$('list').addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b)return;const q=D.quotations.find(r=>r.id===b.dataset.id);
+  if(b.dataset.a==='view')viewQ(q);
+  if(b.dataset.a==='pdf')makePdf(q);
+  if(b.dataset.a==='mail')sendMail(q);
+  if(b.dataset.a==='edit'){editId=q.id;$('prop').value=q.property;$('agent').value=q.agent;$('client').value=q.client;$('email').value=q.email;$('cin').value=q.checkin;$('cout').value=q.checkout;$('source').value=q.source||'Email';$('btype').value=q.btype||'Walk-in guest';$('agency').value=q.agencyId||'';toggleType();syncDates();$('cout').value=q.checkout&&q.checkout>q.checkin?q.checkout:'';
+    rows=q.items.map(r=>({...r}));$('due').value=q.optionDate;$('inc').value=q.inclusions;$('terms').value=q.terms;$('pol').value=q.policies;updSug();renderRows();scrollTo({top:0,behavior:'smooth'});toast('Editing '+q.ref)}
+  if(b.dataset.a==='conf'){makePdf(q,true);addLog('Confirmation generated',q.ref,q.client)}
+  if(b.dataset.a==='del'&&me&&me.role==='admin'&&await ask('Delete quotation '+q.ref+'? This cannot be undone.')){await rm('quotations',q.id);addLog('Deleted quotation',q.ref,q.client+' · '+fmt(q.total));renderList()}});
+
+/* ---------- email ---------- */
+async function sendMail(q){
+  if(!q.email){toast('Add the client email first (Edit the quotation)');return}
+  const body=`Dear ${q.client},\n\nThank you for your interest in ${q.property}. Please find our quotation ${q.ref} (PDF attached).\n\nTotal: ${fmt(q.total)}\nOption date: ${q.optionDate}\n\nKindly confirm on or before the option date to hold your booking.\n\nBest regards,\n${q.agent||'Reservations'}\nH Hospitality Group`;
+  const a=document.createElement('a');a.href=`mailto:${encodeURIComponent(q.email)}?subject=${encodeURIComponent(`Quotation ${q.ref} – ${q.property}`)}&body=${encodeURIComponent(body)}`;
+  document.body.appendChild(a);a.click();a.remove();
+  q.emailStatus='Email sent';if(q.payment==='Pending')q.payment='Sent';await persist(q);addLog('Email sent',q.ref,q.email);
+  toast('Email draft opened. Attach the PDF, then send.');}
+
+/* ---------- PDF ---------- */
+const longD=s=>s?new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'-';
+function ask(msg){return new Promise(res=>{openModal(`<p>${esc(msg)}</p><div class="bar"><button class="p" id="yes">Yes</button><button id="no">Cancel</button></div>`);
+  $('yes').onclick=()=>{$('modal').hidden=true;res(true)};$('no').onclick=()=>{$('modal').hidden=true;res(false)}})}
+function openModal(h){$('mbody').innerHTML=h;$('modal').hidden=false}
+$('mclose').onclick=()=>{$('modal').hidden=true;$('mbody').innerHTML=''};
+function previewPdf(blob,fn,e){const u=URL.createObjectURL(blob);openModal(`<h2>${esc(fn)}</h2><p class="mute">Saving a file was not available here (${esc((e&&(e.code||e.message))||'unknown')}). Preview below.</p><iframe src="${u}" style="width:100%;height:70vh;border:1px solid var(--line)"></iframe><p><a href="${u}" download="${esc(fn)}">Download PDF</a></p>`)}
+async function makePdf(q,conf){
+  if(!window.jspdf){toast('PDF library did not load. Check your connection.');return}
+  try{
+  const doc=new jspdf.jsPDF({unit:'pt',format:'a4'});const W=doc.internal.pageSize.getWidth(),M=40,isG=q.property===GRP,pi=pinfo(q.property);
+  doc.setFillColor(0,0,0);doc.rect(0,0,W,100,'F');doc.setTextColor(255);
+  doc.setFont('helvetica','bold').setFontSize(20).text('H Hospitality Group',M,34);if(!isG)doc.setFontSize(12).text(q.property,M,52);
+  doc.setFont('helvetica','normal').setFontSize(9).text(doc.splitTextToSize(pi.address,W-2*M-150)[0],M,isG?54:68);doc.text(`${pi.email}   |   ${pi.phone}`,M,isG?68:82);
+  doc.setFontSize(conf?15:18).setFont('helvetica','bold').text(conf?'BOOKING CONFIRMATION':'QUOTATION',W-M,46,{align:'right'});
+  doc.setTextColor(30);doc.setFontSize(10).setFont('helvetica','normal');let y=124;
+  const L=conf?[['Reference',q.ref],['Confirmed on',longD(iso(new Date()))],['Payment','PAID']]:[['Quotation no.',q.ref],['Date issued',new Date(q.issued).toLocaleString('en-US',{dateStyle:'long',timeStyle:'short'})]];
+  const ag=!!q.agencyName;const cut=t=>doc.splitTextToSize(String(t||'-'),150)[0];
+  if(ag)L.push(['Bill to',cut(q.agencyName)],['Address',cut(q.agencyAddress)],['Email',cut(q.agencyEmail)],['TIN',cut(q.agencyTin)]);
+  const R=[['Guest',q.client]];if(!ag)R.push(['Email',q.email||'-']);R.push(['Check in:',longD(q.checkin)],['Check out:',longD(q.checkout)]);
+  L.forEach((r,i)=>{doc.setFont('helvetica','bold').text(r[0],M,y+i*15);doc.setFont('helvetica','normal').text(String(r[1]),M+80,y+i*15)});
+  R.forEach((r,i)=>{doc.setFont('helvetica','bold').text(r[0],W/2+20,y+i*15);doc.setFont('helvetica','normal').text(String(r[1]),W/2+90,y+i*15)});
+  const num=n=>Number(n).toLocaleString('en-PH',{minimumFractionDigits:2});
+  const hasD=q.items.some(r=>r.disc);
+  const head=['#','Type','Description','Qty','Unit price','Amount'].concat(hasD?['Discounted rate','Net amount']:[]);
+  const cs={0:{cellWidth:24},3:{halign:'right',cellWidth:32},4:{halign:'right',cellWidth:62},5:{halign:'right',cellWidth:68}};
+  if(hasD){cs[6]={halign:'right',cellWidth:68};cs[7]={halign:'right',cellWidth:70}}
+  doc.autoTable({startY:y+Math.max(L.length,R.length)*15+10,head:[head],
+    body:q.items.map((r,i)=>{const b=[i+1,r.type,r.desc,r.qty,num(r.price),num(r.qty*r.price)];return hasD?b.concat([r.disc?num(r.drate):'-',num(eff(r))]):b}),
+    foot:[[{content:conf?'TOTAL PAID (PHP)':'TOTAL (PHP)',colSpan:head.length-1,styles:{halign:'right'}},num(q.total)]],
+    headStyles:{fillColor:[0,0,0]},footStyles:{fillColor:[225,225,225],textColor:0,fontSize:12},columnStyles:cs,styles:{fontSize:9.5},margin:{left:M,right:M}});
+  y=doc.lastAutoTable.finalY+22;
+  if(!conf){doc.setFont('helvetica','bold').setFontSize(11).setTextColor(0).text('Option date (due): '+longD(q.optionDate),M,y);y+=26}
+  const block=(title,text)=>{const lines=doc.splitTextToSize(text||'-',W-2*M);const h=16+lines.length*12;
+    if(y+h>780){doc.addPage();y=50}doc.setFont('helvetica','bold').setFontSize(11).setTextColor(0).text(title,M,y);
+    doc.setFont('helvetica','normal').setFontSize(9.5).setTextColor(40).text(lines,M,y+15);y+=h+10};
+  if(conf)block('Booking confirmed','Thank you for your payment. Your reservation is confirmed. Please present this confirmation and a valid ID upon check-in.');
+  block('Hotel amenities / inclusions',q.inclusions);if(!conf)block('Terms & conditions',q.terms);block('Hotel policies',q.policies);
+  const blob=doc.output('blob'),fn=q.ref+(conf?'-CONFIRMATION':'')+'.pdf';
+  try{const dl=await claude.use('downloads');if(!dl)throw{code:'unavailable'};await dl.save({filename:fn,data:blob})}
+  catch(e){if(e&&e.code==='declined')return;previewPdf(blob,fn,e)}
+  }catch(err){toast('PDF error: '+(err.message||err))}
+}
+
+/* ---------- storage, auth, admin ---------- */
+function enforce(){if(!me)return;const u=D.users.find(x=>x.id===me.id);if(u&&u.active!==false)return;
+  me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('pw').hidden=true;$('who').hidden=true;$('modal').hidden=true;$('login').hidden=false;$('lp').value='';
+  $('lerr').className='bad';$('lerr').textContent='Your account has been deactivated. Please contact your administrator.'}
+async function put(c,o){if(me&&me.role!=='admin'){const u=D.users.find(x=>x.id===me.id);if(u&&u.active===false){enforce();return}}
+  const a=D[c],i=a.findIndex(x=>x.id===o.id);if(i<0)a.unshift(o);else a[i]=o;
+  try{if(db)await db.collection(c).doc(o.id).set(o);else localStorage.setItem('hhg_'+c,JSON.stringify(a))}catch(e){toast('Save failed: '+(e.message||e.code))}}
+async function rm(c,id){D[c]=D[c].filter(x=>x.id!==id);try{if(db)await db.collection(c).doc(id).delete();else localStorage.setItem('hhg_'+c,JSON.stringify(D[c]))}catch(e){toast('Delete failed')}}
+function watch(c,cb){return new Promise(res=>{const done=()=>{cb&&cb();res()};
+  if(db)db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>({id:d.id,...d.data()}));done()},()=>res());
+  else{try{D[c]=JSON.parse(localStorage.getItem('hhg_'+c)||'[]')}catch(e){}done()}setTimeout(res,3000)})}
+async function hash(p){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('hhg:'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return'x'+btoa(p)}}
+function addLog(action,ref,detail){if(!me)return;put('logs',{id:'l'+Date.now()+Math.random().toString(36).slice(2,6),ts:new Date().toISOString(),user:me.name,role:me.role,action,ref:ref||'',detail:detail||''})}
+function renderLogs(){if(!me||me.role!=='admin')return;$('loglist').innerHTML=[...D.logs].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,200).map(l=>`<tr><td>${new Date(l.ts).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'medium'})}</td><td>${esc(l.user)}</td><td>${esc(l.role)}</td><td>${esc(l.action)}</td><td>${esc(l.ref)}</td><td>${esc(l.detail)}</td></tr>`).join('')}
+const isMail=v=>/^\S+@\S+\.\S+$/.test(v);
+function renderUsers(){if(!me||me.role!=='admin')return;
+  $('ulist').innerHTML=D.users.map(u=>`<tr class="${u.active===false?'off':''}"><td>${esc(u.name)}</td><td>${esc(u.username)}</td><td>${esc(u.email||'-')}</td><td>${u.role}</td><td>${u.active===false?'<span class="tag mute">Deactivated</span>':u.resetRequested?'<span class="tag bad">Reset requested</span>':u.mustChange?'<span class="tag warn">Must set new password</span>':'<span class="tag ok">Active</span>'}<br><span class="mute" style="font-size:12px">${u.pwAt?'Changed '+new Date(u.pwAt).toLocaleDateString('en-PH',{dateStyle:'medium'}):''}</span></td><td><div class="acts"><button class="s" data-ued="${u.id}">Edit</button><button class="s" data-ue="${u.id}">Set temp password</button>${u.role==='admin'?'':u.active===false?`<button class="s p" data-ut="${u.id}">Activate</button>`:`<button class="s d" data-ut="${u.id}">Deactivate</button>`}</div></td></tr>`).join('');
+  $('ucount').textContent=`${D.users.filter(u=>u.role!=='admin').length} of 8 agents`}
+let uEditId=null;
+$('uadd').onclick=async()=>{const n=$('un').value.trim(),u=$('uu').value.trim().toLowerCase(),m=$('ue').value.trim().toLowerCase(),p=$('up').value;const ex=uEditId?D.users.find(x=>x.id===uEditId):D.users.find(x=>x.username===u);
+  if(D.users.some(x=>x.username===u&&(!ex||x.id!==ex.id))){toast('That username is already used');return}
+  if(!n||!u||!isMail(m)){toast('Enter name, username and a valid email');return}
+  if((!ex||p)&&p.length<6){toast('Temporary password needs at least 6 characters');return}
+  if(!ex&&D.users.filter(x=>x.role!=='admin').length>=8){toast('Maximum of 8 agents reached');return}
+  const o={...(ex||{}),id:ex?ex.id:'u'+Date.now(),username:u,name:n,email:m,role:ex?ex.role:'agent'};
+  if(p){o.hash=await hash(p);o.mustChange=true;o.resetRequested=false}
+  await put('users',o);if(me.id===o.id)me=o;addLog(ex?(p?'Temporary password set':'Updated user'):'Added agent','',u+' · '+m);
+  ['un','uu','ue','up'].forEach(k=>$(k).value='');uEditId=null;$('uadd').textContent='Add / update user';renderUsers();toast('User saved')};
+$('ulist').onclick=async e=>{const d=e.target.dataset;if(d.ue||d.ued){const u=D.users.find(x=>x.id===(d.ue||d.ued));uEditId=u.id;$('uadd').textContent='Save changes';$('un').value=u.name;$('uu').value=u.username;$('ue').value=u.email||'';(d.ue?$('up'):$('un')).focus();toast(d.ue?'Enter a temporary password, then save':'Edit the name, username or email, then Save changes')}
+  if(d.ut){const u=D.users.find(x=>x.id===d.ut);if(!u||u.role==='admin')return;const off=u.active!==false;
+    if(!off||await ask('Deactivate '+u.name+' ('+u.username+')? They will be signed out and unable to log in until reactivated.')){await put('users',{...u,active:!off});addLog(off?'User deactivated':'User activated','',u.username);renderUsers()}}};
+$('fg').onchange=()=>$('fgbox').hidden=!$('fg').checked;
+$('fbtn').onclick=async()=>{const m=$('fe').value.trim().toLowerCase();if(!isMail(m)){$('lerr').className='bad';$('lerr').textContent='Enter your registered email.';return}
+  const u=D.users.find(x=>(x.email||'').toLowerCase()===m);
+  if(u&&u.active!==false){await put('users',{...u,resetRequested:true,resetAt:new Date().toISOString()});await put('logs',{id:'l'+Date.now(),ts:new Date().toISOString(),user:u.name,role:u.role,action:'Password reset requested',ref:'',detail:m})}
+  $('lerr').className='ok';$('lerr').textContent='If that email is registered, the admin has been notified and will give you a temporary password.'};
+$('pbtn').onclick=async()=>{const a=$('np').value,b=$('cp').value;$('perr').textContent='';
+  if(a.length<6){$('perr').textContent='Use at least 6 characters.';return}if(a!==b){$('perr').textContent='Passwords do not match.';return}
+  const h=await hash(a);if(h===me.hash){$('perr').textContent='Choose a password different from the temporary one.';return}
+  me={...me,hash:h,mustChange:false,resetRequested:false,pwAt:new Date().toISOString()};await put('users',me);
+  $('pw').hidden=true;$('np').value=$('cp').value='';start();addLog('Password changed','',me.username);addLog('Signed in','','')};
+$('pcancel').onclick=()=>{me=null;$('pw').hidden=true;$('login').hidden=false};
+/* agencies */
+let agEdit=null;const AG=()=>{const a=D.settings.find(x=>x.id==='agencies');return(a&&a.list)||[]};
+function renderAG(){$('aglist').innerHTML=AG().map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.email)}</td><td>${esc(a.address)}</td><td>${esc(a.tin)}</td><td><div class="acts"><button class="s" data-ae="${a.id}">Edit</button><button class="s d" data-ad="${a.id}">Delete</button></div></td></tr>`).join('');
+  const v=$('agency').value;$('agency').innerHTML='<option value="">Select agency</option>'+AG().map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');$('agency').value=v;showBill()}
+$('agsave').onclick=async()=>{const o={id:agEdit||'a'+Date.now(),name:$('agn').value.trim(),email:$('age').value.trim(),address:$('aga').value.trim(),tin:$('agt').value.trim()};
+  if(!o.name||!isMail(o.email)||!o.address||!o.tin){toast('Fill in agency name, valid email, address and TIN');return}
+  const l=AG().filter(x=>x.id!==o.id);l.push(o);l.sort((a,b)=>a.name.localeCompare(b.name));await put('settings',{id:'agencies',list:l});addLog(agEdit?'Agency updated':'Agency added','',o.name);
+  agEdit=null;['agn','age','aga','agt'].forEach(k=>$(k).value='');renderAG();toast('Agency saved')};
+$('aglist').onclick=async e=>{const d=e.target.dataset,a=AG().find(x=>x.id===(d.ae||d.ad));if(!a)return;
+  if(d.ae){agEdit=a.id;$('agn').value=a.name;$('age').value=a.email;$('aga').value=a.address;$('agt').value=a.tin}
+  if(d.ad&&await ask('Delete agency '+a.name+'?')){await put('settings',{id:'agencies',list:AG().filter(x=>x.id!==a.id)});addLog('Agency deleted','',a.name);renderAG()}};
+function toggleType(){$('agwrap').hidden=$('btype').value!=='Travel agency';showBill()}
+function showBill(){const b=$('billto'),on=$('btype').value==='Travel agency',a=AG().find(x=>x.id===$('agency').value);b.hidden=!on;
+  b.innerHTML=a?`<b>Bill to:</b> ${esc(a.name)}<br>${esc(a.address)}<br>${esc(a.email)} · TIN ${esc(a.tin)}`:'<span class="mute">Select an agency. The admin sets up agency details under Travel agencies.</span>';
+  if(on&&a&&(!$('email').value||$('email').dataset.auto)){$('email').value=a.email;$('email').dataset.auto='1'}}
+$('btype').onchange=toggleType;$('agency').onchange=showBill;$('email').oninput=()=>{$('email').dataset.auto=''};
+/* dashboard + view */
+const stOf=q=>q.payment==='Paid'?'paid':q.payment==='Failed'?'failed':(dayDiff(q.optionDate)<0?'overdue':'pending');
+function renderDash(){const Q=D.quotations,c={paid:0,pending:0,failed:0,overdue:0};Q.forEach(q=>c[stOf(q)]++);
+  $('kpis').innerHTML=[['Quotes created',Q.length,'--brand'],['Pending',c.pending,'--sun'],['Successful (paid)',c.paid,'--ok'],['Failed',c.failed,'--bad'],['Overdue – follow up',c.overdue,'--over']].map(k=>`<div class="kpi" style="border-left-color:var(${k[2]})"><div class="n">${k[1]}</div><div class="mute">${k[0]}</div></div>`).join('');
+  const per=ALLP.map(p=>{const o={paid:0,pending:0,failed:0,overdue:0,t:0};Q.filter(q=>q.property===p).forEach(q=>{o[stOf(q)]++;o.t++});return[p,o]}),mx=Math.max(1,...per.map(x=>x[1].t));
+  $('chart').innerHTML=per.map(([p,o])=>`<div class="brow"><span class="bl">${esc(p)}</span><div class="bt">${['paid','pending','overdue','failed'].map(k=>o[k]?`<i class="s_${k}" style="width:${o[k]/mx*100}%" title="${k}: ${o[k]}"></i>`:'').join('')}</div><b>${o.t}</b></div>`).join('')}
+function viewQ(q){const[d]=dueInfo(q),[p]=payInfo(q);
+  openModal(`<h2>${q.ref} · ${esc(q.property)}</h2><p>${esc(q.btype||'Walk-in guest')}${q.agencyName?' · Bill to '+esc(q.agencyName)+' · TIN '+esc(q.agencyTin)+' · '+esc(q.agencyEmail)+' · '+esc(q.agencyAddress):''}<br>Guest: ${esc(q.client)} · ${esc(q.email||'-')}<br>Check in: ${longD(q.checkin)} · Check out: ${longD(q.checkout)}<br>Prepared by ${esc(q.agent||'-')} · Source: ${esc(q.source||'-')} · Option date: ${longD(q.optionDate)}<br>Status: ${d} · Email: ${q.emailStatus} · Payment: ${p}</p>
+  <div class="scroll"><table style="min-width:560px"><thead><tr><th>Type</th><th>Description</th><th>Qty</th><th>Rate</th><th>Disc. rate</th><th style="text-align:right">Net</th></tr></thead><tbody>${q.items.map(r=>`<tr><td>${esc(r.type)}</td><td>${esc(r.desc)}</td><td>${r.qty}</td><td>${fmt(r.price)}</td><td>${r.disc?fmt(r.drate):'-'}</td><td class="amt">${fmt(eff(r))}</td></tr>`).join('')}</tbody></table></div>
+  <div class="total"><span>Total</span><span>${fmt(q.total)}</span></div><h3>Inclusions</h3><pre>${esc(q.inclusions)}</pre><h3>Terms &amp; conditions</h3><pre>${esc(q.terms)}</pre><h3>Hotel policies</h3><pre>${esc(q.policies)}</pre>`)}
+/* property details, defaults */
+$('pp').innerHTML=ALLP.map(p=>`<option>${p}</option>`).join('');
+const fillPP=()=>{const i=pinfo($('pp').value);$('pa').value=i.address;$('pe').value=i.email;$('pt').value=i.phone};$('pp').onchange=fillPP;
+$('psave').onclick=async()=>{propInfo[$('pp').value]={address:$('pa').value,email:$('pe').value,phone:$('pt').value};await put('settings',{id:'props',map:propInfo});addLog('Property details updated','',$('pp').value);toast('Saved')};
+$('savedef').onclick=async()=>{DEF={terms:$('terms').value,pol:$('pol').value};await put('settings',{id:'terms',terms:DEF.terms,pol:DEF.pol});addLog('Default terms & policies updated','','');toast('Saved as default for all agents')};
+function applySettings(){const t=D.settings.find(x=>x.id==='terms'),p=D.settings.find(x=>x.id==='props');if(t)DEF={terms:t.terms,pol:t.pol};propInfo=(p&&p.map)||{};renderAG();
+  if(!editId&&!$('client').value){$('terms').value=DEF.terms;$('pol').value=DEF.pol}}
+function start(){$('login').hidden=true;$('app').hidden=false;$('who').hidden=false;$('whoname').textContent=`${me.name} · ${me.role}`;
+  const a=me.role==='admin';document.querySelectorAll('.adm').forEach(e=>e.hidden=!a);$('terms').readOnly=$('pol').readOnly=!a;$('agent').readOnly=true;
+  if(a&&!logsOn){logsOn=true;watch('logs',renderLogs)}if(a){renderUsers();fillPP()}resetForm();renderList()}
+$('lbtn').onclick=async()=>{const u=$('lu').value.trim().toLowerCase(),p=$('lp').value;$('lerr').className='bad';$('lerr').textContent='';
+  let usr=D.users.find(x=>x.username===u);
+  if(!usr&&u==='admin'&&!D.users.some(x=>x.role==='admin')){usr={id:'u_admin',username:'admin',name:'Administrator',role:'admin',email:'',mustChange:true,hash:await hash('admin123')};await put('users',usr)}
+  if(!usr||usr.hash!==await hash(p)){$('lerr').textContent='Wrong username or password.';return}
+  if(usr.active===false){$('lerr').textContent='This account is deactivated. Please contact your administrator.';return}
+  me=usr;try{sessionStorage.setItem('hhg_me',usr.id)}catch(e){}
+  $('login').hidden=true;if(me.mustChange)$('pw').hidden=false;else{start();addLog('Signed in','','')}};
+$('lp').onkeydown=e=>{if(e.key==='Enter')$('lbtn').click()};
+$('logout').onclick=()=>{addLog('Signed out','','');me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('who').hidden=true;$('login').hidden=false;$('lp').value=''};
+
+/* ---------- boot ---------- */
+resetForm();
+(async()=>{try{const c=await claude.use('db');if(c)db=c}catch(e){}
+  await Promise.all([watch('users',()=>{renderUsers();enforce()}),watch('settings',applySettings),watch('quotations',renderList)]);
+  $('lbtn').disabled=false;
+  try{const id=sessionStorage.getItem('hhg_me'),u=D.users.find(x=>x.id===id);if(u&&u.active!==false){me=u;if(u.mustChange){$('login').hidden=true;$('pw').hidden=false}else start()}}catch(e){}})();
+setInterval(renderList,60000);
+</script>
+</body>
+</html>
