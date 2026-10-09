@@ -395,7 +395,7 @@ function enforce(){if(!me)return;const u=D.users.find(x=>x.id===me.id);if(u&&u.a
   $('lerr').className='bad';$('lerr').textContent='Your account has been deactivated. Please contact your administrator.'}
 async function put(c,o){if(me&&me.role!=='admin'){const u=D.users.find(x=>x.id===me.id);if(u&&u.active===false){enforce();return}}
   const a=D[c],i=a.findIndex(x=>x.id===o.id);if(i<0)a.unshift(o);else a[i]=o;
-  try{if(db)await db.collection(c).doc(o.id).set(o);else localStorage.setItem('hhg_'+c,JSON.stringify(a))}catch(e){toast('Save failed: '+(e.message||e.code))}}
+  try{if(db)await db.collection(c).doc(o.id).set(o);else localStorage.setItem('hhg_'+c,JSON.stringify(a))}catch(e){toast(e&&e.code==='invalid_argument'?'Could not save. You may have view-only access (ask your administrator for Contributor access), or the item is too large.':'Save failed: '+((e&&(e.message||e.code))||'unknown error'))}}
 async function rm(c,id){D[c]=D[c].filter(x=>x.id!==id);try{if(db)await db.collection(c).doc(id).delete();else localStorage.setItem('hhg_'+c,JSON.stringify(D[c]))}catch(e){toast('Delete failed')}}
 function watch(c,cb){return new Promise(res=>{const done=()=>{cb&&cb();res()};
   if(db)db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>({id:d.id,...d.data()}));done()},()=>res());
@@ -420,7 +420,7 @@ function renderUsers(){if(!me||me.role!=='admin')return;
   $('ulist').innerHTML=D.users.map(u=>`<tr class="${u.active===false?'off':''}"><td>${esc(u.name)}</td><td>${esc(u.username)}</td><td>${esc(u.email||'-')}</td><td>${u.role}</td><td>${u.active===false?'<span class="tag mute">Deactivated</span>':u.resetRequested?'<span class="tag bad">Reset requested</span>':u.mustChange?(inviteExpired(u)?'<span class="tag bad">Invite expired</span>':u.inviteExp?`<span class="tag warn">Invited · ${Math.max(1,Math.ceil((new Date(u.inviteExp)-Date.now())/36e5))}h left</span>`:'<span class="tag warn">Must set new password</span>'):'<span class="tag ok">Active</span>'}<br><span class="mute" style="font-size:12px">${u.pwAt?'Changed '+new Date(u.pwAt).toLocaleDateString('en-PH',{dateStyle:'medium'}):''}</span></td><td><div class="acts"><button class="s" data-ued="${u.id}">Edit</button><button class="s" data-ue="${u.id}">${u.mustChange?'Resend invite':'Set temp password'}</button>${u.role==='admin'?'':u.active===false?`<button class="s p" data-ut="${u.id}">Activate</button>`:`<button class="s d" data-ut="${u.id}">Deactivate</button>`}</div></td></tr>`).join('');
   $('ucount').textContent=`${D.users.filter(u=>u.role!=='admin').length} of 8 agents`}
 let uEditId=null;
-$('uadd').onclick=async()=>{const n=$('un').value.trim(),u=$('uu').value.trim().toLowerCase(),m=$('ue').value.trim().toLowerCase(),p=$('up').value;const ex=uEditId?D.users.find(x=>x.id===uEditId):D.users.find(x=>x.username===u);
+$('uadd').onclick=async()=>{const n=$('un').value.trim(),u=$('uu').value.trim().toLowerCase(),m=$('ue').value.trim().toLowerCase(),p=$('up').value.trim();const ex=uEditId?D.users.find(x=>x.id===uEditId):D.users.find(x=>x.username===u);
   if(D.users.some(x=>x.username===u&&(!ex||x.id!==ex.id))){toast('That username is already used');return}
   if(!n||!u||!isMail(m)){toast('Enter name, username and a valid email');return}
   if((!ex||p)&&p.length<6){toast('Temporary password needs at least 6 characters');return}
@@ -546,9 +546,10 @@ function start(){$('login').hidden=true;$('app').hidden=false;$('who').hidden=fa
   const a=me.role==='admin';document.body.classList.toggle('isadmin',a);$('nav').hidden=false;$('menubtn').hidden=false;go('dash');document.querySelectorAll('.adm').forEach(e=>e.hidden=!a);$('terms').readOnly=$('pol').readOnly=!a;$('agent').readOnly=true;
   if(a&&!logsOn){logsOn=true;watch('logs',renderLogs)}if(a){renderUsers();fillPP();fillCat();fillTP()}resetForm();renderList()}
 $('lbtn').onclick=async()=>{const u=$('lu').value.trim().toLowerCase(),p=$('lp').value;$('lerr').className='bad';$('lerr').textContent='';
+  if(dbOff){$('lerr').textContent='Cannot reach the shared data. Please sign in to Claude with the account you were invited with, open this page again from your invite link, and try again. If it still fails, ask your administrator to give you Contributor access.';return}
   let usr=D.users.find(x=>x.username===u);
   if(!usr&&u==='admin'&&!D.users.some(x=>x.role==='admin')){usr={id:'u_admin',username:'admin',name:'Administrator',role:'admin',email:'',mustChange:true,hash:await hash('admin123')};await put('users',usr)}
-  if(!usr||usr.hash!==await hash(p)){$('lerr').textContent='Wrong username or password.';return}
+  const h1=await hash(p),h2=await hash(p.trim());if(!usr||(usr.hash!==h1&&usr.hash!==h2)){$('lerr').textContent='Wrong username or password.';return}
   if(inviteExpired(usr)){$('lerr').textContent=EXP_MSG;return}
   if(usr.active===false){$('lerr').textContent='This account is deactivated. Please contact your administrator.';return}
   me=usr;try{sessionStorage.setItem('hhg_me',usr.id)}catch(e){}
@@ -633,8 +634,10 @@ $('tpfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f
   catch(err){toast('Import failed: '+(err.message||err))}};
 
 /* ---------- boot ---------- */
+let dbOff=false;
 resetForm();
 (async()=>{try{const c=await claude.use('db');if(c)db=c}catch(e){}
+  dbOff=!db&&typeof claude!=='undefined';
   await Promise.all([watch('users',()=>{renderUsers();enforce()}),watch('settings',applySettings),watch('quotations',renderList),watch('chat',renderChat)]);
   $('lbtn').disabled=false;
   try{const id=sessionStorage.getItem('hhg_me'),u=D.users.find(x=>x.id===id);if(u&&u.active!==false){me=u;if(u.mustChange){$('login').hidden=true;$('pw').hidden=false}else start()}}catch(e){}})();
