@@ -107,6 +107,7 @@ body{--tint:color-mix(in srgb,var(--brand) 12%,var(--card))}
  .cols{height:230px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header>
@@ -115,7 +116,7 @@ body{--tint:color-mix(in srgb,var(--brand) 12%,var(--card))}
   <div class="who" id="who" hidden><span id="whoname"></span><button class="s" id="logout">Sign out</button></div>
 </header>
 <div id="login"><section style="width:min(380px,100%)"><h1 style="color:var(--brand)">H Hospitality Group</h1><p class="mute" style="margin:4px 0 14px">Sign in to the quotation desk</p>
-<label>Username<input id="lu" autocomplete="username"></label><label style="margin-top:10px">Password<input id="lp" type="password" autocomplete="current-password"></label>
+<label>Email<input id="lu" type="email" autocomplete="username"></label><label style="margin-top:10px">Password<input id="lp" type="password" autocomplete="current-password"></label>
 <p id="lerr" class="bad" style="min-height:20px;margin:8px 0"></p><button class="p" id="lbtn" disabled style="width:100%">Sign in</button>
 <label style="display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--ink)"><input type="checkbox" id="fg" style="width:auto;margin:0"> Forgot password</label>
 <div id="fgbox" hidden><label>Registered email<input id="fe" type="email"></label><button id="fbtn" style="width:100%;margin-top:8px">Request password reset</button></div></section></div>
@@ -195,10 +196,11 @@ body{--tint:color-mix(in srgb,var(--brand) 12%,var(--card))}
 <div class="sub" style="margin-top:0">Profile icon</div><div class="avgrid" id="avgrid"></div>
 <div class="sub">Theme color</div><div class="thgrid" id="thgrid"></div>
 <div class="sub">Change password</div><div class="grid" style="max-width:760px"><label>Current password<input id="spc" type="password" autocomplete="current-password"></label><label>New password<input id="spn" type="password" autocomplete="new-password"></label><label>Confirm new password<input id="spr" type="password" autocomplete="new-password"></label></div><p id="spm" style="min-height:20px;margin:8px 0"></p><div class="bar" style="margin-top:0"><button class="p" id="spw">Update password</button></div></section>
-<section class="adm" data-pg="users" hidden><h2>Users <span class="mute" id="ucount" style="font-size:14px;font-family:Figtree"></span></h2>
-<div class="grid"><label>Full name<input id="un"></label><label>Username<input id="uu"></label><label>Email (required)<input id="ue" type="email"></label><label>Temporary password (invite)<input id="up"></label></div>
-<div class="bar"><button class="p" id="uadd">Add / update user</button></div><p class="mute" style="margin:6px 0">Saving a temporary password shows the invite email to send to the agent. The temporary password works as an invite: the agent must sign in within 48 hours and create their own password. After 48 hours the invite is no longer available, so use Resend invite to issue a new one. Passwords are never shown, even to the admin; if someone forgets theirs, set a new temporary password. Leave the password blank to update name or email only. 1 admin, up to 8 agents.</p>
-<div class="scroll"><table class="rt"><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="ulist"></tbody></table></div></section>
+<section class="adm" data-pg="users" hidden><h2>Users <span class="mute" id="ucount" style="font-size:14px;font-family:Figtree"></span></h2><p class="warn">Manage login accounts in Supabase Authentication and set each user’s role/status in public.profiles. The legacy in-app user/password form is not used with Supabase Auth.</p>
+<div hidden class="grid"><label>Full name<input id="un"></label><label>Username<input id="uu"></label><label>Email (required)<input id="ue" type="email"></label><label>Temporary password (invite)<input id="up"></label></div>
+<p class="mute" style="margin:6px 0">Login accounts and access are managed in Supabase. To add an agent, create the account under <b>Authentication → Users</b>, then add a matching row in <b>Table Editor → public.profiles</b> using the same user ID. Set <code>full_name</code>, <code>role</code> (admin or reservations), and <code>active</code> (true/false). Do not enter or store passwords in this app.</p>
+<div class="bar"><button class="p" id="uadd" hidden>Add / update user</button></div>
+<div class="scroll" hidden><table class="rt"><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="ulist"></tbody></table></div></section>
 <section class="adm" data-pg="agencies" hidden><h2>Travel agencies (billing details)</h2><div class="grid"><label>Agency name<input id="agn"></label><label>Email<input id="age" type="email"></label><label>Address<input id="aga"></label><label>TIN<input id="agt"></label></div>
 <div class="bar"><button class="p" id="agsave">Save agency</button><button id="agexp">Export Excel</button><button id="agimp">Import Excel</button><input type="file" id="agfile" accept=".xlsx,.xls" hidden></div><div class="scroll"><table class="rt"><thead><tr><th>Agency</th><th>Email</th><th>Address</th><th>TIN</th><th></th></tr></thead><tbody id="aglist"></tbody></table></div></section>
 <section class="adm" data-pg="cat" hidden><h2>Rooms, items &amp; services (per property)</h2><p class="mute" style="margin:0 0 12px">These appear in the quotation form only when that property is selected. Room rates are not stored: agents enter them. Items and services keep a standard price that fills in the unit price automatically.</p>
@@ -384,23 +386,32 @@ async function makePdf(q,conf){
   if(conf)block('Booking confirmed','Thank you for your payment. Your reservation is confirmed. Please present this confirmation and a valid ID upon check-in.');
   block('Hotel amenities / inclusions',q.inclusions);if(!conf)block('Terms & conditions',q.terms);block('Hotel policies',q.policies);
   const blob=doc.output('blob'),fn=q.ref+(conf?'-CONFIRMATION':'')+'.pdf';
-  try{const dl=await claude.use('downloads');if(!dl)throw{code:'unavailable'};await dl.save({filename:fn,data:blob})}
+  try{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url)}
   catch(e){if(e&&e.code==='declined')return;previewPdf(blob,fn,e)}
   }catch(err){toast('PDF error: '+(err.message||err))}
 }
 
-/* ---------- storage, auth, admin ---------- */
-function enforce(){if(!me)return;const u=D.users.find(x=>x.id===me.id);if(u&&u.active!==false)return;
-  me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('nav').hidden=true;$('menubtn').hidden=true;applyTheme(null);$('chatw').hidden=true;document.body.classList.remove('isadmin');$('pw').hidden=true;$('who').hidden=true;$('modal').hidden=true;$('login').hidden=false;$('lp').value='';
-  $('lerr').className='bad';$('lerr').textContent='Your account has been deactivated. Please contact your administrator.'}
-async function put(c,o){if(me&&me.role!=='admin'){const u=D.users.find(x=>x.id===me.id);if(u&&u.active===false){enforce();return}}
-  const a=D[c],i=a.findIndex(x=>x.id===o.id);if(i<0)a.unshift(o);else a[i]=o;
-  try{if(db)await db.collection(c).doc(o.id).set(o);else localStorage.setItem('hhg_'+c,JSON.stringify(a))}catch(e){toast(e&&e.code==='invalid_argument'?'Could not save. You may have view-only access (ask your administrator for Contributor access), or the item is too large.':'Save failed: '+((e&&(e.message||e.code))||'unknown error'))}}
-async function rm(c,id){D[c]=D[c].filter(x=>x.id!==id);try{if(db)await db.collection(c).doc(id).delete();else localStorage.setItem('hhg_'+c,JSON.stringify(D[c]))}catch(e){toast('Delete failed')}}
-function watch(c,cb){return new Promise(res=>{const done=()=>{cb&&cb();res()};
-  if(db)db.collection(c).onSnapshot(s=>{D[c]=s.docs.map(d=>({id:d.id,...d.data()}));done()},()=>res());
-  else{try{D[c]=JSON.parse(localStorage.getItem('hhg_'+c)||'[]')}catch(e){}done()}setTimeout(res,3000)})}
-async function hash(p){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('hhg:'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return'x'+btoa(p)}}
+/* ---------- Supabase storage, auth, admin ---------- */
+// Add your Supabase Project URL and Publishable key below before publishing.
+const SUPABASE_URL = 'https://qebmefinmzjyxlzdfqrt.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_4HVK45p7Av8WdjApQooSHw_gPIf089G';
+const SUPABASE_CONFIGURED = SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('PASTE_') && !SUPABASE_ANON_KEY.includes('PASTE_');
+const sb = SUPABASE_CONFIGURED ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+if(!SUPABASE_CONFIGURED){$('lerr').textContent='Admin setup required: add the Supabase Project URL and Publishable key in the code.';}
+function enforce(){if(!me)return;if(me.active!==false)return;
+  me=null;sb.auth.signOut();$('app').hidden=true;$('nav').hidden=true;$('menubtn').hidden=true;applyTheme(null);$('chatw').hidden=true;document.body.classList.remove('isadmin');$('pw').hidden=true;$('who').hidden=true;$('modal').hidden=true;$('login').hidden=false;$('lp').value='';
+  $('lerr').className='bad';$('lerr').textContent='Your account is deactivated. Please contact your administrator.'}
+async function put(c,o){
+  try{
+    const payload={collection:c,record_id:String(o.id),data:o,created_by:me?.id||null,updated_at:new Date().toISOString()};
+    const {error}=await sb.from('app_records').upsert(payload,{onConflict:'collection,record_id'});
+    if(error)throw error;
+    const a=D[c];const i=a.findIndex(x=>x.id===o.id);if(i<0)a.unshift(o);else a[i]=o;
+  }catch(e){toast('Save failed: '+(e.message||'Supabase error'))}
+}
+async function rm(c,id){try{const {error}=await sb.from('app_records').delete().eq('collection',c).eq('record_id',String(id));if(error)throw error;D[c]=D[c].filter(x=>x.id!==id)}catch(e){toast('Delete failed: '+(e.message||''))}}
+async function watch(c,cb){try{const {data,error}=await sb.from('app_records').select('record_id,data').eq('collection',c);if(error)throw error;D[c]=(data||[]).map(r=>({...r.data,id:r.record_id}));cb&&cb()}catch(e){console.error('Supabase read failed',c,e.message);toast('Could not load '+c+': '+e.message)}}
+async function hash(p){return p}
 function addLog(action,ref,detail){if(!me)return;put('logs',{id:'l'+Date.now()+Math.random().toString(36).slice(2,6),ts:new Date().toISOString(),user:me.name,role:me.role,action,ref:ref||'',detail:detail||''})}
 function renderLogs(){if(!me||me.role!=='admin')return;$('loglist').innerHTML=[...D.logs].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,200).map(l=>`<tr><td>${new Date(l.ts).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'medium'})}</td><td>${esc(l.user)}</td><td>${esc(l.role)}</td><td>${esc(l.action)}</td><td>${esc(l.ref)}</td><td>${esc(l.detail)}</td></tr>`).join('')}
 const INV_MS=48*36e5,inviteExpired=u=>!!(u&&u.role!=='admin'&&u.mustChange&&u.inviteExp&&new Date(u.inviteExp)<new Date()),EXP_MSG='This invite has expired (valid for 48 hours only). Please ask your administrator to send a new invite.';
@@ -433,17 +444,9 @@ $('ulist').onclick=async e=>{const d=e.target.dataset;if(d.ue||d.ued){const u=D.
   if(d.ut){const u=D.users.find(x=>x.id===d.ut);if(!u||u.role==='admin')return;const off=u.active!==false;
     if(!off||await ask('Deactivate '+u.name+' ('+u.username+')? They will be signed out and unable to log in until reactivated.')){await put('users',{...u,active:!off});addLog(off?'User deactivated':'User activated','',u.username);renderUsers()}}};
 $('fg').onchange=()=>$('fgbox').hidden=!$('fg').checked;
-$('fbtn').onclick=async()=>{const m=$('fe').value.trim().toLowerCase();if(!isMail(m)){$('lerr').className='bad';$('lerr').textContent='Enter your registered email.';return}
-  const u=D.users.find(x=>(x.email||'').toLowerCase()===m);
-  if(u&&u.active!==false){await put('users',{...u,resetRequested:true,resetAt:new Date().toISOString()});await put('logs',{id:'l'+Date.now(),ts:new Date().toISOString(),user:u.name,role:u.role,action:'Password reset requested',ref:'',detail:m})}
-  $('lerr').className='ok';$('lerr').textContent='If that email is registered, the admin has been notified and will give you a temporary password.'};
-$('pbtn').onclick=async()=>{const a=$('np').value,b=$('cp').value;$('perr').textContent='';
-  if(inviteExpired(me)){$('perr').textContent=EXP_MSG;return}
-  if(a.length<6){$('perr').textContent='Use at least 6 characters.';return}if(a!==b){$('perr').textContent='Passwords do not match.';return}
-  const h=await hash(a);if(h===me.hash){$('perr').textContent='Choose a password different from the temporary one.';return}
-  me={...me,hash:h,mustChange:false,resetRequested:false,pwAt:new Date().toISOString()};await put('users',me);
-  $('pw').hidden=true;$('np').value=$('cp').value='';start();addLog('Password changed','',me.username);addLog('Signed in','','')};
-$('pcancel').onclick=()=>{me=null;$('pw').hidden=true;$('login').hidden=false};
+$('fbtn').onclick=async()=>{const email=$('fe').value.trim().toLowerCase();if(!isMail(email)){$('lerr').textContent='Enter your registered email.';return}const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0]});$('lerr').className=error?'bad':'ok';$('lerr').textContent=error?error.message:'If that email is registered, a password reset email has been sent.'};
+$('pbtn').onclick=async()=>{const a=$('np').value,b=$('cp').value;$('perr').textContent='';if(a.length<6){$('perr').textContent='Use at least 6 characters.';return}if(a!==b){$('perr').textContent='Passwords do not match.';return}const {error}=await sb.auth.updateUser({password:a});if(error){$('perr').textContent=error.message;return}$('pw').hidden=true;$('np').value=$('cp').value='';toast('Password updated')};
+$('pcancel').onclick=()=>{$('pw').hidden=true;$('login').hidden=false};
 /* agencies */
 let agEdit=null;const AG=()=>{const a=D.settings.find(x=>x.id==='agencies');return(a&&a.list)||[]};
 function renderAG(){$('aglist').innerHTML=AG().map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.email)}</td><td>${esc(a.address)}</td><td>${esc(a.tin)}</td><td><div class="acts"><button class="s" data-ae="${a.id}">Edit</button><button class="s d" data-ad="${a.id}">Delete</button></div></td></tr>`).join('');
@@ -495,7 +498,7 @@ async function xlSave(sheets,fn,ins){if(!window.XLSX){toast('Excel library not l
   const wb=XLSX.utils.book_new();if(ins){const w=XLSX.utils.aoa_to_sheet(ins.map(x=>[x]));w['!cols']=[{wch:90}];XLSX.utils.book_append_sheet(wb,w,'Instructions')}
   sheets.forEach(([n,rows,cols])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=cols.map(wch=>({wch}));XLSX.utils.book_append_sheet(wb,ws,n)});
   const blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  try{const dl=await claude.use('downloads');if(!dl)throw{code:'unavailable'};await dl.save({filename:fn,data:blob});return true}
+  try{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fn;a.click();URL.revokeObjectURL(url);return true}
   catch(e){if(!(e&&e.code==='declined'))toast('Export failed: '+((e&&(e.message||e.code))||'unavailable'));return false}}
 async function xlRows(f,sheet){const wb=XLSX.read(await f.arrayBuffer(),{type:'array'}),n=wb.SheetNames.find(x=>x.trim().toLowerCase()===sheet.toLowerCase())||wb.SheetNames.find(x=>x!=='Instructions');return n?XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''}).slice(1):[]}
 $('pexp').onclick=async()=>{if(await xlSave([['Properties',[['Property','Address','Email','Contact number'],...ALLP.map(n=>{const i=propInfo[n]||{};return[n,i.address||'',i.email||'',i.phone||'']})],[28,50,30,20]]],'HHG-property-details.xlsx',['Property details shown in the PDF header.','One line per property. Do not change the property names.','Blank cells keep the current value when importing.','Save the file, then press Import Excel.']))addLog('Property details exported','','Excel')};
@@ -545,15 +548,15 @@ function applySettings(){const t=D.settings.find(x=>x.id==='terms'),p=D.settings
 function start(){$('login').hidden=true;$('app').hidden=false;$('who').hidden=false;showWho();applyTheme(me.theme);renderSettings();$('chatw').hidden=false;$('chatp').hidden=true;renderChat();
   const a=me.role==='admin';document.body.classList.toggle('isadmin',a);$('nav').hidden=false;$('menubtn').hidden=false;go('dash');document.querySelectorAll('.adm').forEach(e=>e.hidden=!a);$('terms').readOnly=$('pol').readOnly=!a;$('agent').readOnly=true;
   if(a&&!logsOn){logsOn=true;watch('logs',renderLogs)}if(a){renderUsers();fillPP();fillCat();fillTP()}resetForm();renderList()}
-$('lbtn').onclick=async()=>{const u=$('lu').value.trim().toLowerCase(),p=$('lp').value;$('lerr').className='bad';$('lerr').textContent='';
-  if(dbOff){$('lerr').textContent='Cannot reach the shared data. Please sign in to Claude with the account you were invited with, open this page again from your invite link, and try again. If it still fails, ask your administrator to give you Contributor access.';return}
-  let usr=D.users.find(x=>x.username===u);
-  if(!usr&&u==='admin'&&!D.users.some(x=>x.role==='admin')){usr={id:'u_admin',username:'admin',name:'Administrator',role:'admin',email:'',mustChange:true,hash:await hash('admin123')};await put('users',usr)}
-  const h1=await hash(p),h2=await hash(p.trim());if(!usr||(usr.hash!==h1&&usr.hash!==h2)){$('lerr').textContent='Wrong username or password.';return}
-  if(inviteExpired(usr)){$('lerr').textContent=EXP_MSG;return}
-  if(usr.active===false){$('lerr').textContent='This account is deactivated. Please contact your administrator.';return}
-  me=usr;try{sessionStorage.setItem('hhg_me',usr.id)}catch(e){}
-  $('login').hidden=true;if(me.mustChange)$('pw').hidden=false;else{start();addLog('Signed in','','')}};
+$('lbtn').onclick=async()=>{if(!sb){$('lerr').textContent='Supabase URL/key not configured yet.';return}const email=$('lu').value.trim().toLowerCase(),password=$('lp').value;$('lerr').className='bad';$('lerr').textContent='';
+  if(!email||!password){$('lerr').textContent='Enter your email and password.';return}
+  try{const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;
+    const {data:prof,error:pe}=await sb.from('profiles').select('id,full_name,role,active').eq('id',data.user.id).single();if(pe)throw pe;
+    if(!prof.active){await sb.auth.signOut();throw new Error('This account is deactivated. Please contact your administrator.')}
+    me={id:prof.id,name:prof.full_name||email,email,username:email,role:prof.role,active:prof.active,avatar:data.user.user_metadata?.avatar||'🙂',theme:data.user.user_metadata?.theme||'green'};
+    await Promise.all([watch('quotations',renderList),watch('settings',applySettings),watch('chat',renderChat)]);
+    $('login').hidden=true;start();addLog('Signed in','','');
+  }catch(e){$('lerr').textContent=e.message||'Sign-in failed.'}};
 $('lp').onkeydown=e=>{if(e.key==='Enter')$('lbtn').click()};
 $('logout').onclick=()=>{addLog('Signed out','','');me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('nav').hidden=true;$('menubtn').hidden=true;applyTheme(null);$('chatw').hidden=true;document.body.classList.remove('isadmin');$('who').hidden=true;$('login').hidden=false;$('lp').value=''};
 
@@ -585,7 +588,7 @@ function applyTheme(k){const r=document.documentElement.style,t=THEMES.find(x=>x
 const showWho=()=>{$('whoname').textContent=`${me.avatar||'🙂'} ${me.name} · ${me.role}`};
 function renderSettings(){$('avgrid').innerHTML=AVS.map(a=>`<button class="avb${(me.avatar||'')===a?' on':''}" data-av="${a}" aria-label="Choose icon ${a}">${a}</button>`).join('');
   $('thgrid').innerHTML=THEMES.map(t=>`<button class="thb${(me.theme||'green')===t[0]?' on':''}" data-th="${t[0]}" style="--c:${t[2]}"><i></i>${t[1]}</button>`).join('')}
-async function saveProf(patch){const u={...(D.users.find(x=>x.id===me.id)||me),...patch};await put('users',u);me=u;showWho();renderSettings()}
+async function saveProf(patch){const meta={};if(patch.avatar)meta.avatar=patch.avatar;if(patch.theme)meta.theme=patch.theme;const {error}=await sb.auth.updateUser({data:meta});if(error){toast(error.message);return}me={...me,...patch};showWho();renderSettings()}
 $('avgrid').onclick=e=>{const b=e.target.closest('[data-av]');if(b)saveProf({avatar:b.dataset.av})};
 $('thgrid').onclick=e=>{const b=e.target.closest('[data-th]');if(b){applyTheme(b.dataset.th);saveProf({theme:b.dataset.th})}};
 $('spw').onclick=async()=>{const m=$('spm'),say=(t,ok)=>{m.textContent=t;m.className=ok?'ok':'bad'},c=$('spc').value,a=$('spn').value,b=$('spr').value;
@@ -634,14 +637,15 @@ $('tpfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f
   catch(err){toast('Import failed: '+(err.message||err))}};
 
 /* ---------- boot ---------- */
-let dbOff=false;
 resetForm();
-(async()=>{try{const c=await claude.use('db');if(c)db=c}catch(e){}
-  dbOff=!db&&typeof claude!=='undefined';
-  await Promise.all([watch('users',()=>{renderUsers();enforce()}),watch('settings',applySettings),watch('quotations',renderList),watch('chat',renderChat)]);
-  $('lbtn').disabled=false;
-  try{const id=sessionStorage.getItem('hhg_me'),u=D.users.find(x=>x.id===id);if(u&&u.active!==false){me=u;if(u.mustChange){$('login').hidden=true;$('pw').hidden=false}else start()}}catch(e){}})();
-setInterval(()=>{renderList();renderUsers()},60000);
+$('lbtn').disabled=false;
+if(sb)sb.auth.onAuthStateChange(async(event,session)=>{
+  if(event==='SIGNED_OUT'){me=null;$('app').hidden=true;$('nav').hidden=true;$('who').hidden=true;$('login').hidden=false;}
+});
+$('logout').onclick=async()=>{if(me)addLog('Signed out','','');await sb.auth.signOut();me=null;$('app').hidden=true;$('nav').hidden=true;$('menubtn').hidden=true;applyTheme(null);$('chatw').hidden=true;document.body.classList.remove('isadmin');$('who').hidden=true;$('login').hidden=false;$('lp').value=''};
+$('spw').onclick=async()=>{const m=$('spm'),a=$('spn').value,b=$('spr').value;if(a.length<6){m.textContent='Use at least 6 characters.';return}if(a!==b){m.textContent='The new passwords do not match.';return}const {error}=await sb.auth.updateUser({password:a});if(error){m.textContent=error.message;return}$('spc').value=$('spn').value=$('spr').value='';m.textContent='Password updated.'};
+(async()=>{if(!sb)return;const {data:{session}}=await sb.auth.getSession();if(session){const {data:prof}=await sb.from('profiles').select('id,full_name,role,active').eq('id',session.user.id).single();if(prof&&prof.active){me={id:prof.id,name:prof.full_name||session.user.email,email:session.user.email,username:session.user.email,role:prof.role,active:prof.active,avatar:session.user.user_metadata?.avatar||'🙂',theme:session.user.user_metadata?.theme||'green'};await Promise.all([watch('quotations',renderList),watch('settings',applySettings),watch('chat',renderChat)]);start()}}})();
+setInterval(async()=>{if(sb&&me){await Promise.all([watch('quotations',renderList),watch('settings',applySettings),watch('chat',renderChat)]);if(me.role==='admin')await watch('logs',renderLogs)}},30000);
 </script>
 </body>
 </html>
