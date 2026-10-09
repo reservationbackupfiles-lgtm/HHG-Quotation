@@ -5,52 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>H Hospitality Group – Quotations</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root{--bg:#eef3f3;--card:#fff;--ink:#12302f;--mute:#5d7776;--line:#d3e0df;--brand:#0f5c59;--brand-ink:#fff;--sun:#e8a93a;--bad:#b3392f;--ok:#237a4b;--warn:#a86a00;
+:root{--bg:#f5f7f6;--card:#fff;--ink:#1b2a29;--mute:#6a7b7a;--line:#e3e9e8;--brand:#14625e;--brand-ink:#fff;--sun:#d99a2b;--bad:#b3392f;--ok:#237a4b;--warn:#a86a00;--over:#6b5bd6;--tint:#eef5f4;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1b1b;--card:#142828;--ink:#e6f0ef;--mute:#8fadab;--line:#264240;--brand:#3fb3ad;--brand-ink:#082322;--sun:#e8a93a;--bad:#ff8b7f;--ok:#6fd49b;--warn:#f0b755}}
-:root[data-theme="dark"]{--bg:#0d1b1b;--card:#142828;--ink:#e6f0ef;--mute:#8fadab;--line:#264240;--brand:#3fb3ad;--brand-ink:#082322;--sun:#e8a93a;--bad:#ff8b7f;--ok:#6fd49b;--warn:#f0b755}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a1a;--card:#152727;--ink:#e6f0ef;--mute:#8fadab;--line:#264240;--brand:#3fb3ad;--brand-ink:#082322;--sun:#e8a93a;--bad:#ff8b7f;--ok:#6fd49b;--warn:#f0b755;--over:#a99cff;--tint:#1a3232}}
+:root[data-theme="dark"]{--bg:#0e1a1a;--card:#152727;--ink:#e6f0ef;--mute:#8fadab;--line:#264240;--brand:#3fb3ad;--brand-ink:#082322;--sun:#e8a93a;--bad:#ff8b7f;--ok:#6fd49b;--warn:#f0b755;--over:#a99cff;--tint:#1a3232}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,sans-serif}
-header{background:var(--brand);color:var(--brand-ink);padding:18px 20px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:end}
-h1,h2{font-family:'Bricolage Grotesque',Georgia,serif;margin:0}h1{font-size:26px}h2{font-size:19px;margin-bottom:12px}
-.clock{font-weight:500;text-align:right}.clock small{display:block;opacity:.8;font-weight:400}
-main{max-width:1100px;margin:0 auto;padding:18px 14px 60px;display:grid;gap:18px}
-section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-label{display:block;font-size:13px;color:var(--mute);font-weight:500}
-input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:3px}
-input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
-textarea{min-height:120px;resize:vertical}
-.prop{border-left:5px solid var(--sun)}
-.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:1020px}
-th{text-align:left;font-size:13px;color:var(--mute);font-weight:500;padding:6px;border-bottom:2px solid var(--line)}
-td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:middle}td input,td select{margin:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:center}
+h1,h2{font-family:'Bricolage Grotesque',Georgia,serif;margin:0;letter-spacing:-.01em}h1{font-size:24px;color:var(--brand)}h2{font-size:18px;margin-bottom:14px}
+header div:first-child div{color:var(--mute);font-size:13.5px}
+.clock{font-weight:500;text-align:right;font-size:14px}.clock small{display:block;color:var(--mute);font-weight:400;font-size:12px}
+main{max-width:1180px;margin:0 auto;padding:20px 14px 60px;display:grid;gap:16px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(20,40,40,.04)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:14px}
+label{display:block;font-size:12.5px;color:var(--mute);font-weight:500;letter-spacing:.01em}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-top:4px;min-width:0}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px;border-color:transparent}
+textarea{min-height:130px;resize:vertical}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse}.rt{min-width:720px}.rt.big{min-width:1080px}.rt.it{min-width:940px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--line)}
+td{padding:7px 5px;border-bottom:1px solid var(--line);vertical-align:middle}td input,td select{margin:0}
 td.amt{text-align:right;font-weight:600;white-space:nowrap;padding-right:8px}
-.total{display:flex;justify-content:space-between;align-items:center;padding:12px 8px;font-size:18px;font-weight:600}
-.total span:last-child{font-family:'Bricolage Grotesque',serif;font-size:24px}
-button{font:inherit;font-weight:500;border-radius:6px;border:1px solid var(--brand);background:var(--card);color:var(--brand);padding:8px 14px;cursor:pointer}
-button.p{background:var(--brand);color:var(--brand-ink)}button.d{border-color:var(--bad);color:var(--bad)}button.s{padding:4px 9px;font-size:13px}
-.bar{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.total{display:flex;justify-content:space-between;align-items:center;padding:14px 8px 0;font-size:16px;font-weight:600}
+.total span:last-child{font-family:'Bricolage Grotesque',serif;font-size:24px;color:var(--brand)}
+button{font:inherit;font-weight:500;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px;cursor:pointer;transition:background .15s,border-color .15s}
+button:hover{border-color:var(--brand);color:var(--brand)}
+button.p{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}button.p:hover{opacity:.9;color:var(--brand-ink)}
+button.d{color:var(--bad)}button.d:hover{border-color:var(--bad);color:var(--bad)}button.s{padding:4px 10px;font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
 .ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}.mute{color:var(--mute)}
-.acts{display:flex;gap:5px;flex-wrap:wrap}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
 [hidden]{display:none!important}
 tr.off td:not(:last-child){opacity:.4}tr.off td:first-child{text-decoration:line-through}
-:root{--over:#6b5bd6}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--over:#a99cff}}:root[data-theme="dark"]{--over:#a99cff}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.kpi{border:1px solid var(--line);border-left:5px solid;border-radius:8px;padding:10px 12px}.kpi .n{font:700 30px 'Bricolage Grotesque',serif}
-.brow{display:flex;align-items:center;gap:10px;margin:6px 0}.bl{width:190px;font-size:13px;flex:none}.bt{flex:1;display:flex;height:16px;background:var(--bg);border-radius:4px;overflow:hidden}.bt i{display:block;height:100%}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px;margin-bottom:12px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:12px 14px}.kpi .n{font:700 28px/1.2 'Bricolage Grotesque',serif}
+.kpi .l{color:var(--mute);font-size:13px}.kpi .l::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:7px}
+.revs{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}.revs .kpi{background:var(--tint);border-color:transparent;padding:16px 18px}.revs .n{font-size:clamp(24px,5vw,32px);color:var(--brand)}.revs small{color:var(--mute);font-size:12.5px}
+.sub{margin:22px 0 8px;font:600 15px Figtree,sans-serif}
+.cols{display:flex;gap:8px;height:260px;overflow-x:auto;padding-bottom:2px}
+.col{flex:1 0 74px;display:flex;flex-direction:column;min-width:74px}
+.plot{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;border-bottom:1px solid var(--line)}
+.plot b{font-size:13px;margin-bottom:3px}.stack{width:62%;max-width:46px;display:flex;flex-direction:column;border-radius:6px 6px 0 0;overflow:hidden}.stack i{display:block;min-height:3px}
+.cl{height:44px;font-size:12px;color:var(--mute);text-align:center;line-height:1.25;padding-top:6px;overflow:hidden}
+.lg{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--mute);font-size:12.5px;margin-top:10px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
 .s_paid{background:var(--ok)}.s_pending{background:var(--sun)}.s_overdue{background:var(--over)}.s_failed{background:var(--bad)}
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:15;display:grid;place-items:center;padding:16px}.mcard{background:var(--card);width:min(820px,100%);max-height:90vh;overflow:auto;border-radius:10px;padding:18px}pre{white-space:pre-wrap;font:inherit;margin:0 0 8px}h3{margin:12px 0 4px;font-size:15px}textarea[readonly]{opacity:.7}.who{display:flex;gap:10px;align-items:center}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:15;display:grid;place-items:center;padding:16px}.mcard{background:var(--card);width:min(820px,100%);max-height:90vh;overflow:auto;border-radius:14px;padding:20px}pre{white-space:pre-wrap;font:inherit;margin:0 0 8px}h3{margin:12px 0 4px;font-size:15px}textarea[readonly]{opacity:.7}.who{display:flex;gap:10px;align-items:center;font-size:14px}
 #login{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:20;padding:20px}
-#toast{z-index:30;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;display:none;z-index:9}
+.btnlink{display:inline-block;font-weight:500;border-radius:8px;padding:9px 16px;background:var(--brand);color:var(--brand-ink);text-decoration:none}
+.pgoff{display:none!important}
+nav{flex:0 0 236px;width:236px;background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px;padding:14px 10px;position:sticky;top:env(safe-area-inset-top,0px);align-self:flex-start;min-height:calc(100vh - 80px);max-height:100vh;overflow-y:auto;z-index:25}
+.shell{display:flex;align-items:flex-start}.shell>main{flex:1;min-width:0;width:100%}
+.navlbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600;padding:14px 14px 4px}
+.burger{border:0;background:transparent;padding:8px;border-radius:8px;color:var(--ink);display:grid;place-items:center}.burger:hover{background:var(--tint);border:0;color:var(--brand)}
+#navbk{display:none}
+body.navoff nav{display:none}
+@media (max-width:900px){nav{position:fixed;left:0;top:0;bottom:0;max-height:none;min-height:0;width:270px;max-width:82vw;transform:translateX(-102%);transition:transform .22s ease;box-shadow:4px 0 24px rgba(0,0,0,.18);padding-top:calc(14px + env(safe-area-inset-top,0px))}
+ body.navoff nav{display:flex}body.navopen nav{transform:none}body.navopen #navbk{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:24}}
+.nb{border:0;background:transparent;border-radius:8px;padding:10px 14px;white-space:nowrap;color:var(--mute);text-align:left;width:100%}.nb:hover{background:var(--tint);color:var(--brand);border:0}.nb.on{background:var(--tint);color:var(--brand);font-weight:600}
+:root{--yel:#f5c542;--yel-h:#ffd75e;--yel-b:#e0aa14;--yel-ink:#3a2a00}
+.isadmin button.p,.isadmin section.adm button:not(.d),.isadmin .btnlink{background:var(--yel);color:var(--yel-ink);border-color:var(--yel-b)}
+.isadmin button.p:hover,.isadmin section.adm button:not(.d):hover{background:var(--yel-h);color:var(--yel-ink);border-color:var(--yel-b);opacity:1}
+.isadmin .nb.on{background:#fdf0bd;color:#5c4300}.isadmin .nb:hover{background:#fdf0bd;color:#5c4300}
+body{--tint:color-mix(in srgb,var(--brand) 12%,var(--card))}
+.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:10px;max-width:540px}.avb{font-size:28px;line-height:1;padding:10px 0;border-radius:14px;background:var(--bg)}.avb.on,.thb.on{border:2px solid var(--brand);background:var(--tint)}
+.thgrid{display:flex;flex-wrap:wrap;gap:10px}.thb{display:flex;align-items:center;gap:8px;border-radius:99px;padding:8px 16px}.thb i{width:18px;height:18px;border-radius:50%;background:var(--c);display:inline-block}.thb.on{font-weight:600}
+#chatw{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:12}
+#chatfab{width:56px;height:56px;border-radius:50%;padding:0;background:var(--brand);color:var(--brand-ink);border:0;box-shadow:0 6px 20px rgba(0,0,0,.25);display:grid;place-items:center;position:relative;margin-left:auto}#chatfab:hover{color:var(--brand-ink);opacity:.92}
+#chatbadge{position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;border-radius:99px;min-width:20px;height:20px;display:grid;place-items:center;padding:0 5px}
+#chatp{position:absolute;right:0;bottom:68px;width:min(370px,calc(100vw - 32px));height:min(500px,calc(100vh - 150px));background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden}
+.chh{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}.chh .mute{flex:1;font-size:12px}
+#chatl{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:8px;max-width:90%}.msg.me{align-self:flex-end;flex-direction:row-reverse}.msg .av{font-size:22px;line-height:1.2}.msg .bb{background:var(--bg);border-radius:12px;padding:7px 11px;min-width:0}.msg.me .bb{background:var(--tint)}
+.msg .nm{font-size:11.5px;color:var(--mute)}.msg .tx{white-space:pre-wrap;overflow-wrap:anywhere}.chip{display:inline-block;font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:99px;padding:1px 9px;margin:2px 0;background:var(--card)}
+.chf{border-top:1px solid var(--line);padding:10px;display:grid;gap:8px}.chf select{margin:0;font-size:14px}.chr{display:flex;gap:8px}.chr input{margin:0;flex:1}
+#toast{z-index:30;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;display:none;max-width:90vw}
+@media (max-width:1100px){
+ .scroll{overflow:visible}
+ table.rt,.rt.big,.rt.it{min-width:0}
+ .rt thead{display:none}
+ .rt,.rt tbody,.rt tr,.rt td{display:block;width:100%}
+ .rt tr{border:1px solid var(--line);border-radius:12px;padding:6px 14px;margin-bottom:12px}
+ .rt td{display:flex;justify-content:space-between;align-items:center;gap:14px;border:0;border-bottom:1px solid var(--line);padding:9px 0;text-align:right}
+ .rt td:last-child{border-bottom:0;justify-content:flex-end}
+ .rt td::before{content:attr(data-l);color:var(--mute);font-size:12.5px;font-weight:500;text-align:left;flex:none}
+ .rt td[data-l=""]::before{display:none}
+ .rt td input:not([type=checkbox]),.rt td select{width:58%}
+ .rt td.w{flex-direction:column;align-items:stretch;text-align:left;gap:6px}.rt td.w input{width:100%}
+ .rt td.amt{padding-right:0}.rt td .acts{justify-content:flex-end}
+ tr.off td:not(:last-child){opacity:.5}
+}
+@media (max-width:700px){
+ header{padding:14px 16px}.clock{text-align:left}
+ main{padding:14px 10px 50px}section{padding:16px;border-radius:12px}
+ input,select,textarea{font-size:16px}
+ .bar button{flex:1 1 140px}
+ .cols{height:230px}
+}
 </style>
 </head>
 <body>
 <header>
-  <div><h1>H Hospitality Group</h1><div>Quotation desk · 9 properties</div></div>
+  <div style="display:flex;align-items:center;gap:14px"><button class="burger" id="menubtn" hidden aria-label="Show or hide menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><img id="hlogo" alt="" hidden style="height:46px;max-width:130px;object-fit:contain"><div><h1>H Hospitality Group</h1><div>Quotation desk · 9 properties</div></div></div>
   <div class="clock"><span id="clk"></span><small>Issue date &amp; time are stamped when you save</small></div>
   <div class="who" id="who" hidden><span id="whoname"></span><button class="s" id="logout">Sign out</button></div>
 </header>
@@ -62,15 +122,20 @@ tr.off td:not(:last-child){opacity:.4}tr.off td:first-child{text-decoration:line
 <div id="pw" hidden style="position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:20;padding:20px"><section style="width:min(380px,100%)"><h2>Set your new password</h2><p class="mute" style="margin:4px 0 12px">Your administrator gave you a temporary password. Create your own to continue.</p>
 <label>New password<input id="np" type="password" autocomplete="new-password"></label><label style="margin-top:10px">Confirm new password<input id="cp" type="password" autocomplete="new-password"></label>
 <p id="perr" class="bad" style="min-height:20px;margin:8px 0"></p><button class="p" id="pbtn" style="width:100%">Save password</button><button id="pcancel" style="width:100%;margin-top:8px">Cancel</button></section></div>
+<div id="chatw" hidden><div id="chatp" hidden><div class="chh"><b>Team chat</b><span class="mute">Endorsements &amp; notes</span><button class="s" id="chatx" aria-label="Close chat">✕</button></div><div id="chatl"></div><div class="chf"><select id="chatq"></select><div class="chr"><input id="chatin" placeholder="Write a message…" maxlength="500"><button class="p" id="chatsend">Send</button></div></div></div>
+<button id="chatfab" aria-label="Team chat"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span id="chatbadge" hidden></span></button></div>
+<div id="navbk"></div>
+<div class="shell">
+<nav id="nav" hidden><button class="nb" data-go="dash">Dashboard</button><button class="nb" data-go="new">New quotation</button><button class="nb" data-go="bc">Booking confirmations</button><button class="nb" data-go="settings">Settings</button><div class="navlbl adm" hidden>Admin</div><button class="nb adm" data-go="cat" hidden>Rooms &amp; items</button><button class="nb adm" data-go="hotel" hidden>Hotel info</button><button class="nb adm" data-go="terms" hidden>Terms &amp; policies</button><button class="nb adm" data-go="agencies" hidden>Travel agencies</button><button class="nb adm" data-go="users" hidden>Users &amp; roles</button><button class="nb adm" data-go="log" hidden>Activity log</button></nav>
 <main id="app" hidden>
-<section id="dash"><h2>Dashboard</h2><div class="kpis" id="kpis"></div><h2 style="margin:20px 0 6px;font-size:16px">Quotations per property</h2><div id="chart"></div>
-<div class="mute" style="font-size:12.5px;margin-top:8px"><i class="s_paid" style="display:inline-block;width:10px;height:10px"></i> Paid &nbsp; <i class="s_pending" style="display:inline-block;width:10px;height:10px"></i> Pending &nbsp; <i class="s_overdue" style="display:inline-block;width:10px;height:10px"></i> Overdue &nbsp; <i class="s_failed" style="display:inline-block;width:10px;height:10px"></i> Failed</div></section>
-<section class="prop">
+<section id="dash" data-pg="dash"><h2>Dashboard</h2><div class="kpis revs" id="revs"></div><div class="kpis" id="kpis"></div><div class="sub">Quotations per property</div><div id="chart"></div>
+<div class="lg"><span><i class="s_paid"></i>Paid</span><span><i class="s_pending"></i>Pending</span><span><i class="s_overdue"></i>Overdue</span><span><i class="s_failed"></i>Failed</span></div></section>
+<section data-pg="new">
   <h2>1. Property &amp; guest</h2>
   <div class="grid">
     <label>Property<select id="prop"></select></label>
     <label>Agent name<input id="agent" placeholder="Your name"></label>
-    <label>Booking type<select id="btype"><option>Walk-in guest</option><option>FIT</option><option>Travel agency</option></select></label>
+    <label>Booking type<select id="btype"><option>Walk-in / FIT</option><option>Travel agency</option></select></label>
     <label id="agwrap" hidden>Travel agency<select id="agency"></select></label>
     <label>Source<select id="source"></select></label>
     <label>Guest / client name<input id="client" placeholder="Full name"></label>
@@ -81,18 +146,18 @@ tr.off td:not(:last-child){opacity:.4}tr.off td:first-child{text-decoration:line
   </div>
 </section>
 
-<section>
+<section data-pg="new">
   <h2>2. Quotation items</h2>
-  <div class="scroll"><table>
+  <div class="scroll"><table class="rt it">
     <thead><tr><th style="width:150px">Type</th><th>Description</th><th style="width:70px">Qty</th><th style="width:120px">Unit price (PHP)</th><th style="width:110px;text-align:right">Amount</th><th style="width:80px">Discount?</th><th style="width:120px">Discounted rate</th><th style="width:110px;text-align:right">Net amount</th><th style="width:50px"></th></tr></thead>
     <tbody id="rows"></tbody>
   </table></div>
   <div class="bar"><button id="add">+ Add row</button></div>
   <div class="total"><span>Total</span><span id="total">PHP 0.00</span></div>
-  <datalist id="sug"></datalist>
+  <span id="sugs"></span>
 </section>
 
-<section>
+<section data-pg="new">
   <h2>3. Option date</h2>
   <div class="grid">
     <label>Valid for<select id="days"></select></label>
@@ -101,7 +166,7 @@ tr.off td:not(:last-child){opacity:.4}tr.off td:first-child{text-decoration:line
   <p class="mute" style="margin:8px 0 0">Defaults to 2 days from today. After the option date, unpaid quotations are flagged for follow-up.</p>
 </section>
 
-<section>
+<section data-pg="new">
   <h2>4. Inclusions, terms &amp; policies</h2>
   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
     <label>Amenities / inclusions<textarea id="inc"></textarea></label>
@@ -112,27 +177,42 @@ tr.off td:not(:last-child){opacity:.4}tr.off td:first-child{text-decoration:line
     <button class="p" id="savepdf">Save &amp; generate PDF</button>
     <button id="save">Save only</button>
     <button id="reset">New quotation</button>
-    <button class="adm" id="savedef" hidden>Save terms &amp; policies as default</button>
   </div>
 </section>
 
-<section>
+<section data-pg="dash">
   <h2>Quotation records</h2>
-  <div class="scroll"><table style="min-width:1200px">
+  <div class="scroll"><table class="rt big">
     <thead><tr><th>Ref</th><th>Issued</th><th>Property / client</th><th>Source</th><th>Prepared by</th><th style="text-align:right">Total</th><th>Option date</th><th>Due status</th><th>Email</th><th>Payment</th><th>Actions</th></tr></thead>
     <tbody id="list"></tbody>
   </table></div>
   <p id="empty" class="mute">No quotations yet. Fill in the form above and save.</p>
 </section>
-<section class="adm" hidden><h2>Users <span class="mute" id="ucount" style="font-size:14px;font-family:Figtree"></span></h2>
-<div class="grid"><label>Full name<input id="un"></label><label>Username<input id="uu"></label><label>Email (required)<input id="ue" type="email"></label><label>Temporary password<input id="up"></label></div>
-<div class="bar"><button class="p" id="uadd">Add / update user</button></div><p class="mute" style="margin:6px 0">The agent signs in with the temporary password, then must create their own. Passwords are never shown, even to the admin; if someone forgets theirs, set a new temporary password. Leave the password blank to update name or email only. 1 admin, up to 8 agents.</p>
-<div class="scroll"><table style="min-width:420px"><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="ulist"></tbody></table></div></section>
-<section class="adm" hidden><h2>Travel agencies (billing details)</h2><div class="grid"><label>Agency name<input id="agn"></label><label>Email<input id="age" type="email"></label><label>Address<input id="aga"></label><label>TIN<input id="agt"></label></div>
-<div class="bar"><button class="p" id="agsave">Save agency</button></div><div class="scroll"><table style="min-width:640px"><thead><tr><th>Agency</th><th>Email</th><th>Address</th><th>TIN</th><th></th></tr></thead><tbody id="aglist"></tbody></table></div></section>
-<section class="adm" hidden><h2>Property details (shown in PDF header)</h2><div class="grid"><label>Property<select id="pp"></select></label><label>Address<input id="pa"></label><label>Email<input id="pe"></label><label>Contact number<input id="pt"></label></div><div class="bar"><button class="p" id="psave">Save property details</button></div></section>
-<section class="adm" hidden><h2>Activity log</h2><div class="scroll"><table style="min-width:760px"><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Ref</th><th>Detail</th></tr></thead><tbody id="loglist"></tbody></table></div></section>
+<section data-pg="bc"><h2>Booking confirmations</h2><p class="mute" style="margin:0 0 12px">Monitoring of paid quotations: which booking confirmations are still to be issued and which are missing the hotel confirmation number.</p><div class="kpis" id="bckpi"></div>
+<div class="grid" style="grid-template-columns:minmax(0,280px)"><label>Show<select id="bcf"><option value="all">All paid quotations</option><option value="wait">Awaiting confirmation</option><option value="nohotel">Hotel conf. no. missing</option><option value="done">Fully confirmed</option></select></label></div>
+<div class="scroll" style="margin-top:12px"><table class="rt"><thead><tr><th>Quotation</th><th>Guest</th><th>Check-in</th><th>Total paid</th><th>Status</th><th>Hotel conf. #</th><th>Issued</th><th></th></tr></thead><tbody id="bclist"></tbody></table></div><p class="mute" id="bcempty" style="display:none;margin-top:12px">No paid quotations in this view.</p></section>
+<section data-pg="settings"><h2>Settings</h2>
+<div class="sub" style="margin-top:0">Profile icon</div><div class="avgrid" id="avgrid"></div>
+<div class="sub">Theme color</div><div class="thgrid" id="thgrid"></div>
+<div class="sub">Change password</div><div class="grid" style="max-width:760px"><label>Current password<input id="spc" type="password" autocomplete="current-password"></label><label>New password<input id="spn" type="password" autocomplete="new-password"></label><label>Confirm new password<input id="spr" type="password" autocomplete="new-password"></label></div><p id="spm" style="min-height:20px;margin:8px 0"></p><div class="bar" style="margin-top:0"><button class="p" id="spw">Update password</button></div></section>
+<section class="adm" data-pg="users" hidden><h2>Users <span class="mute" id="ucount" style="font-size:14px;font-family:Figtree"></span></h2>
+<div class="grid"><label>Full name<input id="un"></label><label>Username<input id="uu"></label><label>Email (required)<input id="ue" type="email"></label><label>Temporary password (invite)<input id="up"></label></div>
+<div class="bar"><button class="p" id="uadd">Add / update user</button></div><p class="mute" style="margin:6px 0">Saving a temporary password shows the invite email to send to the agent. The temporary password works as an invite: the agent must sign in within 48 hours and create their own password. After 48 hours the invite is no longer available, so use Resend invite to issue a new one. Passwords are never shown, even to the admin; if someone forgets theirs, set a new temporary password. Leave the password blank to update name or email only. 1 admin, up to 8 agents.</p>
+<div class="scroll"><table class="rt"><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody id="ulist"></tbody></table></div></section>
+<section class="adm" data-pg="agencies" hidden><h2>Travel agencies (billing details)</h2><div class="grid"><label>Agency name<input id="agn"></label><label>Email<input id="age" type="email"></label><label>Address<input id="aga"></label><label>TIN<input id="agt"></label></div>
+<div class="bar"><button class="p" id="agsave">Save agency</button><button id="agexp">Export Excel</button><button id="agimp">Import Excel</button><input type="file" id="agfile" accept=".xlsx,.xls" hidden></div><div class="scroll"><table class="rt"><thead><tr><th>Agency</th><th>Email</th><th>Address</th><th>TIN</th><th></th></tr></thead><tbody id="aglist"></tbody></table></div></section>
+<section class="adm" data-pg="cat" hidden><h2>Rooms, items &amp; services (per property)</h2><p class="mute" style="margin:0 0 12px">These appear in the quotation form only when that property is selected. Room rates are not stored: agents enter them. Items and services keep a standard price that fills in the unit price automatically.</p>
+<div class="grid"><label>Property<select id="catp"></select></label><label>Kind<select id="catk"><option value="room">Room</option><option value="item">Item / service</option></select></label><label id="cattw">Type<select id="catt"></select></label><label>Name / description<input id="catn" placeholder="e.g. Deluxe Room – per night"></label><label id="catpw">Standard price (PHP)<input id="catpr" type="number" min="0" step="0.01"></label></div>
+<div class="bar"><button class="p" id="catsave">Save</button><button id="catexp">Export Excel template</button><button id="catimp">Import Excel</button><label style="display:flex;align-items:center;gap:6px;margin:0;color:var(--ink)"><input type="checkbox" id="catrep" style="width:auto;margin:0"> Replace existing entries of the properties in the file</label><input type="file" id="catfile" accept=".xlsx,.xls" hidden></div><div class="scroll"><table class="rt"><thead><tr><th>Kind</th><th>Type</th><th>Name</th><th>Standard price</th><th></th></tr></thead><tbody id="catlist"></tbody></table></div></section>
+<section class="adm" data-pg="hotel" hidden><h2>Hotel info (shown in PDF header)</h2><div class="grid"><label>Property<select id="pp"></select></label><label>Address<input id="pa"></label><label>Email<input id="pe"></label><label>Contact number<input id="pt"></label></div>
+<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:14px"><div id="plogo" style="width:110px;height:70px;border:1px dashed var(--line);border-radius:10px;background:#fff;display:grid;place-items:center;padding:4px"></div><div class="acts"><button id="plbtn">Upload logo</button><button class="d" id="pldel">Remove logo</button><input type="file" id="plfile" accept="image/png,image/jpeg,image/webp" hidden></div><span class="mute" style="font-size:13px">Shown in the PDF header and the page header when this property is selected. Properties without a logo use the group logo.</span></div><div class="bar"><button class="p" id="psave">Save property details</button><button id="pexp">Export Excel</button><button id="pimp">Import Excel</button><input type="file" id="pfile" accept=".xlsx,.xls" hidden></div></section>
+<section class="adm" data-pg="terms" hidden><h2>Amenities / inclusions, terms &amp; hotel policies (per property)</h2><p class="mute" style="margin:0 0 12px">These fill in automatically in the quotation form and the PDF when the property is selected. Properties without their own text use the default wording.</p>
+<div class="grid"><label>Property<select id="tp"></select></label></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));margin-top:12px"><label>Amenities / inclusions<textarea id="tpi"></textarea></label><label>Terms &amp; conditions<textarea id="tpt"></textarea></label><label>Hotel policies<textarea id="tpp"></textarea></label></div>
+<div class="bar"><button class="p" id="tpsave">Save for this property</button><button id="tpexp">Export Excel</button><button id="tpimp">Import Excel</button><input type="file" id="tpfile" accept=".xlsx,.xls" hidden></div></section>
+<section class="adm" data-pg="log" hidden><h2>Activity log</h2><div class="scroll"><table class="rt"><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Ref</th><th>Detail</th></tr></thead><tbody id="loglist"></tbody></table></div></section>
 </main>
+</div>
 <div id="modal" hidden><div class="mcard"><div style="text-align:right"><button class="s" id="mclose">Close</button></div><div id="mbody"></div></div></div>
 <div id="toast"></div>
 
@@ -150,7 +230,7 @@ const fmt=n=>'PHP '+Number(n||0).toLocaleString('en-PH',{minimumFractionDigits:2
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
 const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let rows=[],editId=null,db=null,toastT,me=null,logsOn=false;const D={quotations:[],users:[],logs:[],settings:[]};
+let rows=[],editId=null,db=null,toastT,me=null,logsOn=false;const D={quotations:[],users:[],logs:[],settings:[],chat:[]};
 function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',2800)}
 
 /* ---------- clock ---------- */
@@ -165,8 +245,12 @@ $('days').onchange=()=>$('due').value=addDays(+$('days').value);
 function syncDates(){const ci=$('cin').value,co=$('cout');co.disabled=!ci;if(!ci){co.value='';co.removeAttribute('min');return}
   const d=new Date(ci+'T00:00:00');d.setDate(d.getDate()+1);const m=iso(d);co.min=m;if(co.value&&co.value<m)co.value=''}
 $('cin').onchange=()=>{syncDates();applyNights()};$('cout').onchange=applyNights;
-$('prop').onchange=()=>{updSug();};
-function updSug(){const p=$('prop').value;$('sug').innerHTML=Object.values(SUG).flat().map(s=>`<option value="${esc(s)}">`).join('')+(p===GRP?PROPS.map(x=>`<option value="${esc(x)} – room, per night">`).join(''):`<option value="${esc(p)} – room, per night">`)}
+$('prop').onchange=()=>{updSug();applyPropText()};
+const PTX=()=>{const d=D.settings.find(x=>x.id==='proptext');return(d&&d.map)||{}};
+function applyPropText(){const m=PTX()[$('prop').value]||{};$('inc').value=m.inc||INC;$('terms').value=m.terms||DEF.terms;$('pol').value=m.pol||DEF.pol}
+const CAT=()=>{const c=D.settings.find(x=>x.id==='catalog');return(c&&c.list)||[]},catType=e=>e.kind==='room'?'Hotel / Room':e.type;
+function catFor(prop,type){const g=prop===GRP;return CAT().filter(e=>(g||e.property===prop)&&catType(e)===type).map(e=>({label:g?e.property+' – '+e.name:e.name,e}))}
+function updSug(){const p=$('prop').value;$('sugs').innerHTML=TYPES.map((t,i)=>`<datalist id="sg${i}">${catFor(p,t).map(x=>`<option value="${esc(x.label)}">`).join('')}</datalist>`).join('');headLogo()}
 
 /* ---------- rows ---------- */
 const eff=r=>r.disc?r.qty*(r.drate||0):r.qty*r.price;
@@ -177,7 +261,7 @@ function newRow(){return{type:TYPES[0],desc:'',qty:nights(),price:0,disc:false,d
 function renderRows(){
   $('rows').innerHTML=rows.map((r,i)=>`<tr>
   <td><select data-i="${i}" data-k="type">${TYPES.map(t=>`<option${t===r.type?' selected':''}>${t}</option>`).join('')}</select></td>
-  <td><input list="sug" data-i="${i}" data-k="desc" value="${esc(r.desc)}" placeholder="Pick a suggestion or type"></td>
+  <td class="w"><input list="sg${TYPES.indexOf(r.type)}" data-i="${i}" data-k="desc" value="${esc(r.desc)}" placeholder="Pick from this property's list or type"></td>
   <td><input type="number" min="0" step="1" data-i="${i}" data-k="qty" value="${r.qty}"></td>
   <td><input type="number" min="0" step="0.01" data-i="${i}" data-k="price" value="${r.price}"></td>
   <td class="amt" id="a${i}">${fmt(r.qty*r.price)}</td>
@@ -191,13 +275,14 @@ function calc(){rows.forEach((r,i)=>{const e=$('a'+i),n=$('n'+i);if(e)e.textCont
 $('rows').addEventListener('input',e=>{const i=e.target.dataset.i;if(i==null)return;const k=e.target.dataset.k;if(k==='disc'){rows[i].disc=e.target.checked;if(e.target.checked&&!rows[i].drate)rows[i].drate=rows[i].price;renderRows();return}
   if(k==='qty')rows[i].qm=true;
   rows[i][k]=(k==='qty'||k==='price'||k==='drate')?(parseFloat(e.target.value)||0):e.target.value;calc()});
-$('rows').addEventListener('change',e=>{if(e.target.dataset.k==='type'){const r=rows[e.target.dataset.i];if(!r.qm)r.qty=NIGHT.includes(r.type)?nights():1;if(!r.desc)r.desc=SUG[r.type][0];renderRows()}});
+$('rows').addEventListener('change',e=>{if(e.target.dataset.k==='type'){const r=rows[e.target.dataset.i];if(!r.qm)r.qty=NIGHT.includes(r.type)?nights():1;if(!r.desc){const f=catFor($('prop').value,r.type)[0];if(f){r.desc=f.label;if(f.e.kind==='item')r.price=f.e.price||0}}renderRows()}
+  if(e.target.dataset.k==='desc'){const r=rows[e.target.dataset.i],m=catFor($('prop').value,r.type).find(x=>x.label===r.desc);if(m&&m.e.kind==='item'&&m.e.price!=null){r.price=m.e.price;if(r.disc)r.drate=r.price;renderRows()}}});
 $('rows').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(!d)return;if(rows.length===1){rows=[newRow()]}else rows.splice(+d.dataset.del,1);renderRows()});
 $('add').onclick=()=>{rows.push(newRow());renderRows()};
 
 /* ---------- form ---------- */
 function resetForm(){editId=null;rows=[newRow()];['agent','client','email','cin','cout'].forEach(k=>$(k).value=(k==='agent'?(me?me.name:''):''));
-  $('source').value='Email';$('btype').value='Walk-in guest';$('agency').value='';$('email').dataset.auto='';toggleType();syncDates();$('days').value=2;$('due').value=addDays(2);$('inc').value=INC;$('terms').value=DEF.terms;$('pol').value=DEF.pol;updSug();renderRows()}
+  $('source').value='Email';$('btype').value='Walk-in / FIT';$('agency').value='';$('email').dataset.auto='';toggleType();syncDates();$('days').value=2;$('due').value=addDays(2);$('terms').value=DEF.terms;applyPropText();updSug();renderRows()}
 $('reset').onclick=resetForm;
 function nextRef(){const d=new Date();const s=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
   const n=D.quotations.filter(r=>r.ref.includes('-'+s+'-')).length+1;return `HHG-${s}-${String(n).padStart(3,'0')}`}
@@ -225,23 +310,23 @@ function payInfo(q){if(['Pending','Sent'].includes(q.payment)&&dayDiff(q.optionD
   return[q.payment,{Paid:'ok',Failed:'bad',Sent:'warn',Pending:'mute'}[q.payment]]}
 
 /* ---------- list ---------- */
-function renderList(){renderDash();
+function renderList(){renderDash();renderBC();
   $('empty').style.display=D.quotations.length?'none':'block';
   $('list').innerHTML=D.quotations.map(q=>{const[d,dc]=dueInfo(q),[p,pc]=payInfo(q);
   return`<tr><td><b>${q.ref}</b></td><td>${new Date(q.issued).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'})}</td>
-  <td>${esc(q.property)}<br><span class="mute">${esc(q.client)}<br>${esc(q.btype||'Walk-in guest')}${q.agencyName?' · '+esc(q.agencyName):''}</span></td><td>${esc(q.source||'-')}</td><td>${esc(q.agent||'-')}</td><td class="amt">${fmt(q.total)}</td><td>${q.optionDate}</td>
+  <td>${esc(q.property)}<br><span class="mute">${esc(q.client)}<br>${esc(BT(q.btype))}${q.agencyName?' · '+esc(q.agencyName):''}</span></td><td>${esc(q.source||'-')}</td><td>${esc(q.agent||'-')}</td><td class="amt">${fmt(q.total)}</td><td>${q.optionDate}</td>
   <td><span class="tag ${dc}">${d}</span></td>
   <td><span class="tag ${q.emailStatus==='Email sent'?'ok':'mute'}">${q.emailStatus}</span></td>
   <td><span class="tag ${pc}">${p}</span><br><select data-pay="${q.id}" style="margin-top:4px;font-size:13px">${['Pending','Sent','Paid','Failed'].map(s=>`<option${s===q.payment?' selected':''}>${s}</option>`).join('')}</select></td>
-  <td><div class="acts"><button class="s" data-a="view" data-id="${q.id}">View</button><button class="s" data-a="pdf" data-id="${q.id}">PDF</button><button class="s" data-a="mail" data-id="${q.id}">Email</button><button class="s" data-a="edit" data-id="${q.id}">Edit</button>${q.payment==='Paid'?`<button class="s p" data-a="conf" data-id="${q.id}">Confirmation</button>`:''}${me&&me.role==='admin'?`<button class="s d" data-a="del" data-id="${q.id}">Delete</button>`:''}</div></td></tr>`}).join('')}
+  <td><div class="acts"><button class="s" data-a="view" data-id="${q.id}">View</button><button class="s" data-a="pdf" data-id="${q.id}">PDF</button><button class="s" data-a="mail" data-id="${q.id}">Email</button><button class="s" data-a="edit" data-id="${q.id}">Edit</button>${q.payment==='Paid'?`<button class="s p" data-a="conf" data-id="${q.id}">${q.confAt?'Booking confirmation ✓':'Booking confirmation'}</button>`:''}${me&&me.role==='admin'?`<button class="s d" data-a="del" data-id="${q.id}">Delete</button>`:''}</div></td></tr>`}).join('')}
 $('list').addEventListener('change',async e=>{const id=e.target.dataset.pay;if(!id)return;const q=D.quotations.find(r=>r.id===id);addLog('Payment status',q.ref,q.payment+' → '+e.target.value);q.payment=e.target.value;await persist(q)});
 $('list').addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b)return;const q=D.quotations.find(r=>r.id===b.dataset.id);
   if(b.dataset.a==='view')viewQ(q);
   if(b.dataset.a==='pdf')makePdf(q);
   if(b.dataset.a==='mail')sendMail(q);
-  if(b.dataset.a==='edit'){editId=q.id;$('prop').value=q.property;$('agent').value=q.agent;$('client').value=q.client;$('email').value=q.email;$('cin').value=q.checkin;$('cout').value=q.checkout;$('source').value=q.source||'Email';$('btype').value=q.btype||'Walk-in guest';$('agency').value=q.agencyId||'';toggleType();syncDates();$('cout').value=q.checkout&&q.checkout>q.checkin?q.checkout:'';
-    rows=q.items.map(r=>({...r}));$('due').value=q.optionDate;$('inc').value=q.inclusions;$('terms').value=q.terms;$('pol').value=q.policies;updSug();renderRows();scrollTo({top:0,behavior:'smooth'});toast('Editing '+q.ref)}
-  if(b.dataset.a==='conf'){makePdf(q,true);addLog('Confirmation generated',q.ref,q.client)}
+  if(b.dataset.a==='edit'){editId=q.id;$('prop').value=q.property;$('agent').value=q.agent;$('client').value=q.client;$('email').value=q.email;$('cin').value=q.checkin;$('cout').value=q.checkout;$('source').value=q.source||'Email';$('btype').value=BT(q.btype);$('agency').value=q.agencyId||'';toggleType();syncDates();$('cout').value=q.checkout&&q.checkout>q.checkin?q.checkout:'';
+    rows=q.items.map(r=>({...r}));$('due').value=q.optionDate;$('inc').value=q.inclusions;$('terms').value=q.terms;$('pol').value=q.policies;updSug();renderRows();go('new');scrollTo({top:0,behavior:'smooth'});toast('Editing '+q.ref)}
+  if(b.dataset.a==='conf')confModal(q);
   if(b.dataset.a==='del'&&me&&me.role==='admin'&&await ask('Delete quotation '+q.ref+'? This cannot be undone.')){await rm('quotations',q.id);addLog('Deleted quotation',q.ref,q.client+' · '+fmt(q.total));renderList()}});
 
 /* ---------- email ---------- */
@@ -257,6 +342,11 @@ async function sendMail(q){
 const longD=s=>s?new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'-';
 function ask(msg){return new Promise(res=>{openModal(`<p>${esc(msg)}</p><div class="bar"><button class="p" id="yes">Yes</button><button id="no">Cancel</button></div>`);
   $('yes').onclick=()=>{$('modal').hidden=true;res(true)};$('no').onclick=()=>{$('modal').hidden=true;res(false)}})}
+function confModal(q){openModal(`<h2>Booking confirmation · ${esc(q.ref)}</h2><p class="mute" style="margin:0 0 12px">${esc(q.client)} · ${esc(q.property)} · ${fmt(q.total)} paid. The details are taken from this quotation.</p>
+  <label>Hotel confirmation no.<input id="hcn" value="${esc(q.hotelConf||'')}" placeholder="Enter the number given by the hotel (can be left blank)"></label>
+  <div class="bar"><button class="p" id="hcgo">Issue booking confirmation (PDF)</button><button id="hcx">Cancel</button></div>`);
+  $('hcx').onclick=()=>$('modal').hidden=true;
+  $('hcgo').onclick=async()=>{q.hotelConf=$('hcn').value.trim();q.confAt=q.confAt||new Date().toISOString();q.confBy=q.confBy||(me?me.name:'');await persist(q);addLog('Booking confirmation issued',q.ref,q.client+(q.hotelConf?' · Hotel conf. '+q.hotelConf:''));$('modal').hidden=true;makePdf(q,true)}}
 function openModal(h){$('mbody').innerHTML=h;$('modal').hidden=false}
 $('mclose').onclick=()=>{$('modal').hidden=true;$('mbody').innerHTML=''};
 function previewPdf(blob,fn,e){const u=URL.createObjectURL(blob);openModal(`<h2>${esc(fn)}</h2><p class="mute">Saving a file was not available here (${esc((e&&(e.code||e.message))||'unknown')}). Preview below.</p><iframe src="${u}" style="width:100%;height:70vh;border:1px solid var(--line)"></iframe><p><a href="${u}" download="${esc(fn)}">Download PDF</a></p>`)}
@@ -264,12 +354,14 @@ async function makePdf(q,conf){
   if(!window.jspdf){toast('PDF library did not load. Check your connection.');return}
   try{
   const doc=new jspdf.jsPDF({unit:'pt',format:'a4'});const W=doc.internal.pageSize.getWidth(),M=40,isG=q.property===GRP,pi=pinfo(q.property);
-  doc.setFillColor(0,0,0);doc.rect(0,0,W,100,'F');doc.setTextColor(255);
-  doc.setFont('helvetica','bold').setFontSize(20).text('H Hospitality Group',M,34);if(!isG)doc.setFontSize(12).text(q.property,M,52);
-  doc.setFont('helvetica','normal').setFontSize(9).text(doc.splitTextToSize(pi.address,W-2*M-150)[0],M,isG?54:68);doc.text(`${pi.email}   |   ${pi.phone}`,M,isG?68:82);
+  doc.setFillColor(0,0,0);doc.rect(0,0,W,100,'F');const lg=logoFor(q.property),TX=lg?M+88:M;
+  if(lg){doc.setFillColor(255,255,255);doc.roundedRect(M,18,76,64,4,4,'F');const k=Math.min(68/lg.w,56/lg.h),iw=lg.w*k,ih=lg.h*k;try{doc.addImage(lg.data,lg.data.startsWith('data:image/png')?'PNG':'JPEG',M+(76-iw)/2,18+(64-ih)/2,iw,ih)}catch(e){}doc.setFillColor(0,0,0)}
+  doc.setTextColor(255);
+  doc.setFont('helvetica','bold').setFontSize(20).text('H Hospitality Group',TX,34);if(!isG)doc.setFontSize(12).text(q.property,TX,52);
+  doc.setFont('helvetica','normal').setFontSize(9).text(doc.splitTextToSize(pi.address,W-TX-M-150)[0],TX,isG?54:68);doc.text(`${pi.email}   |   ${pi.phone}`,TX,isG?68:82);
   doc.setFontSize(conf?15:18).setFont('helvetica','bold').text(conf?'BOOKING CONFIRMATION':'QUOTATION',W-M,46,{align:'right'});
   doc.setTextColor(30);doc.setFontSize(10).setFont('helvetica','normal');let y=124;
-  const L=conf?[['Reference',q.ref],['Confirmed on',longD(iso(new Date()))],['Payment','PAID']]:[['Quotation no.',q.ref],['Date issued',new Date(q.issued).toLocaleString('en-US',{dateStyle:'long',timeStyle:'short'})]];
+  const L=conf?[['Reference',q.ref],['Booking no.','BC-'+q.ref],['Confirmed on',longD(iso(new Date(q.confAt||Date.now())))],['Payment','PAID'],['Hotel conf. #',q.hotelConf||'____________________']]:[['Quotation no.',q.ref],['Date issued',new Date(q.issued).toLocaleString('en-US',{dateStyle:'long',timeStyle:'short'})]];
   const ag=!!q.agencyName;const cut=t=>doc.splitTextToSize(String(t||'-'),150)[0];
   if(ag)L.push(['Bill to',cut(q.agencyName)],['Address',cut(q.agencyAddress)],['Email',cut(q.agencyEmail)],['TIN',cut(q.agencyTin)]);
   const R=[['Guest',q.client]];if(!ag)R.push(['Email',q.email||'-']);R.push(['Check in:',longD(q.checkin)],['Check out:',longD(q.checkout)]);
@@ -299,7 +391,7 @@ async function makePdf(q,conf){
 
 /* ---------- storage, auth, admin ---------- */
 function enforce(){if(!me)return;const u=D.users.find(x=>x.id===me.id);if(u&&u.active!==false)return;
-  me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('pw').hidden=true;$('who').hidden=true;$('modal').hidden=true;$('login').hidden=false;$('lp').value='';
+  me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('nav').hidden=true;$('menubtn').hidden=true;applyTheme(null);$('chatw').hidden=true;document.body.classList.remove('isadmin');$('pw').hidden=true;$('who').hidden=true;$('modal').hidden=true;$('login').hidden=false;$('lp').value='';
   $('lerr').className='bad';$('lerr').textContent='Your account has been deactivated. Please contact your administrator.'}
 async function put(c,o){if(me&&me.role!=='admin'){const u=D.users.find(x=>x.id===me.id);if(u&&u.active===false){enforce();return}}
   const a=D[c],i=a.findIndex(x=>x.id===o.id);if(i<0)a.unshift(o);else a[i]=o;
@@ -311,9 +403,21 @@ function watch(c,cb){return new Promise(res=>{const done=()=>{cb&&cb();res()};
 async function hash(p){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('hhg:'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return'x'+btoa(p)}}
 function addLog(action,ref,detail){if(!me)return;put('logs',{id:'l'+Date.now()+Math.random().toString(36).slice(2,6),ts:new Date().toISOString(),user:me.name,role:me.role,action,ref:ref||'',detail:detail||''})}
 function renderLogs(){if(!me||me.role!=='admin')return;$('loglist').innerHTML=[...D.logs].sort((a,b)=>b.ts.localeCompare(a.ts)).slice(0,200).map(l=>`<tr><td>${new Date(l.ts).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'medium'})}</td><td>${esc(l.user)}</td><td>${esc(l.role)}</td><td>${esc(l.action)}</td><td>${esc(l.ref)}</td><td>${esc(l.detail)}</td></tr>`).join('')}
+const INV_MS=48*36e5,inviteExpired=u=>!!(u&&u.role!=='admin'&&u.mustChange&&u.inviteExp&&new Date(u.inviteExp)<new Date()),EXP_MSG='This invite has expired (valid for 48 hours only). Please ask your administrator to send a new invite.';
+function sendInvite(u,pw){const link=(()=>{try{return location.href.split('#')[0]}catch(e){return''}})(),exp=new Date(u.inviteExp).toLocaleString('en-PH',{dateStyle:'long',timeStyle:'short'}),
+  sub='Your invite to the H Hospitality Group quotation desk',
+  body=`Hi ${u.name},\n\nYou have been invited to the H Hospitality Group quotation desk.\n\nSign in here: ${link}\nUsername: ${u.username}\nTemporary password: ${pw}\n\nThis invite is valid for 48 hours only (until ${exp}). After that it will no longer be available and you will need to ask for a new one. When you sign in, you will be asked to create your own password.\n\nBest regards,\n${me?me.name:'Administrator'}\nH Hospitality Group`,
+  href=`mailto:${u.email}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
+  openModal(`<h2>Invite for ${esc(u.name)}</h2><p class="mute">Valid for 48 hours (until ${esc(exp)}). Open it in your email app, or copy it and send it from any mail.</p>
+  <label>To<input readonly value="${esc(u.email)}"></label><label style="margin-top:8px">Subject<input readonly value="${esc(sub)}"></label>
+  <label style="margin-top:8px">Message<textarea id="ivbd" readonly style="min-height:230px;opacity:1">${esc(body)}</textarea></label>
+  <div class="bar"><a class="btnlink" href="${esc(href)}" target="_blank" rel="noopener">Open in email app</a><button id="ivcopy">Copy message</button></div>`);
+  $('ivcopy').onclick=async()=>{const t=`To: ${u.email}\nSubject: ${sub}\n\n${body}`;try{await navigator.clipboard.writeText(t)}catch(e){const b=$('ivbd');b.select();try{document.execCommand('copy')}catch(_){}}toast('Copied')};
+  addLog('Invite prepared','',u.username+' · '+u.email)}
+const BT=b=>(!b||b==='FIT'||b==='Walk-in guest')?'Walk-in / FIT':b;
 const isMail=v=>/^\S+@\S+\.\S+$/.test(v);
 function renderUsers(){if(!me||me.role!=='admin')return;
-  $('ulist').innerHTML=D.users.map(u=>`<tr class="${u.active===false?'off':''}"><td>${esc(u.name)}</td><td>${esc(u.username)}</td><td>${esc(u.email||'-')}</td><td>${u.role}</td><td>${u.active===false?'<span class="tag mute">Deactivated</span>':u.resetRequested?'<span class="tag bad">Reset requested</span>':u.mustChange?'<span class="tag warn">Must set new password</span>':'<span class="tag ok">Active</span>'}<br><span class="mute" style="font-size:12px">${u.pwAt?'Changed '+new Date(u.pwAt).toLocaleDateString('en-PH',{dateStyle:'medium'}):''}</span></td><td><div class="acts"><button class="s" data-ued="${u.id}">Edit</button><button class="s" data-ue="${u.id}">Set temp password</button>${u.role==='admin'?'':u.active===false?`<button class="s p" data-ut="${u.id}">Activate</button>`:`<button class="s d" data-ut="${u.id}">Deactivate</button>`}</div></td></tr>`).join('');
+  $('ulist').innerHTML=D.users.map(u=>`<tr class="${u.active===false?'off':''}"><td>${esc(u.name)}</td><td>${esc(u.username)}</td><td>${esc(u.email||'-')}</td><td>${u.role}</td><td>${u.active===false?'<span class="tag mute">Deactivated</span>':u.resetRequested?'<span class="tag bad">Reset requested</span>':u.mustChange?(inviteExpired(u)?'<span class="tag bad">Invite expired</span>':u.inviteExp?`<span class="tag warn">Invited · ${Math.max(1,Math.ceil((new Date(u.inviteExp)-Date.now())/36e5))}h left</span>`:'<span class="tag warn">Must set new password</span>'):'<span class="tag ok">Active</span>'}<br><span class="mute" style="font-size:12px">${u.pwAt?'Changed '+new Date(u.pwAt).toLocaleDateString('en-PH',{dateStyle:'medium'}):''}</span></td><td><div class="acts"><button class="s" data-ued="${u.id}">Edit</button><button class="s" data-ue="${u.id}">${u.mustChange?'Resend invite':'Set temp password'}</button>${u.role==='admin'?'':u.active===false?`<button class="s p" data-ut="${u.id}">Activate</button>`:`<button class="s d" data-ut="${u.id}">Deactivate</button>`}</div></td></tr>`).join('');
   $('ucount').textContent=`${D.users.filter(u=>u.role!=='admin').length} of 8 agents`}
 let uEditId=null;
 $('uadd').onclick=async()=>{const n=$('un').value.trim(),u=$('uu').value.trim().toLowerCase(),m=$('ue').value.trim().toLowerCase(),p=$('up').value;const ex=uEditId?D.users.find(x=>x.id===uEditId):D.users.find(x=>x.username===u);
@@ -322,10 +426,10 @@ $('uadd').onclick=async()=>{const n=$('un').value.trim(),u=$('uu').value.trim().
   if((!ex||p)&&p.length<6){toast('Temporary password needs at least 6 characters');return}
   if(!ex&&D.users.filter(x=>x.role!=='admin').length>=8){toast('Maximum of 8 agents reached');return}
   const o={...(ex||{}),id:ex?ex.id:'u'+Date.now(),username:u,name:n,email:m,role:ex?ex.role:'agent'};
-  if(p){o.hash=await hash(p);o.mustChange=true;o.resetRequested=false}
+  if(p){o.hash=await hash(p);o.mustChange=true;o.resetRequested=false;o.inviteAt=new Date().toISOString();o.inviteExp=new Date(Date.now()+INV_MS).toISOString()}
   await put('users',o);if(me.id===o.id)me=o;addLog(ex?(p?'Temporary password set':'Updated user'):'Added agent','',u+' · '+m);
-  ['un','uu','ue','up'].forEach(k=>$(k).value='');uEditId=null;$('uadd').textContent='Add / update user';renderUsers();toast('User saved')};
-$('ulist').onclick=async e=>{const d=e.target.dataset;if(d.ue||d.ued){const u=D.users.find(x=>x.id===(d.ue||d.ued));uEditId=u.id;$('uadd').textContent='Save changes';$('un').value=u.name;$('uu').value=u.username;$('ue').value=u.email||'';(d.ue?$('up'):$('un')).focus();toast(d.ue?'Enter a temporary password, then save':'Edit the name, username or email, then Save changes')}
+  ['un','uu','ue','up'].forEach(k=>$(k).value='');uEditId=null;$('uadd').textContent='Add / update user';renderUsers();if(p){sendInvite(o,p)}else toast('User saved')};
+$('ulist').onclick=async e=>{const d=e.target.dataset;if(d.ue||d.ued){const u=D.users.find(x=>x.id===(d.ue||d.ued));uEditId=u.id;$('uadd').textContent='Save changes';$('un').value=u.name;$('uu').value=u.username;$('ue').value=u.email||'';(d.ue?$('up'):$('un')).focus();toast(d.ue?'Enter a new temporary password, then save. The invite is valid for 48 hours':'Edit the name, username or email, then Save changes')}
   if(d.ut){const u=D.users.find(x=>x.id===d.ut);if(!u||u.role==='admin')return;const off=u.active!==false;
     if(!off||await ask('Deactivate '+u.name+' ('+u.username+')? They will be signed out and unable to log in until reactivated.')){await put('users',{...u,active:!off});addLog(off?'User deactivated':'User activated','',u.username);renderUsers()}}};
 $('fg').onchange=()=>$('fgbox').hidden=!$('fg').checked;
@@ -334,6 +438,7 @@ $('fbtn').onclick=async()=>{const m=$('fe').value.trim().toLowerCase();if(!isMai
   if(u&&u.active!==false){await put('users',{...u,resetRequested:true,resetAt:new Date().toISOString()});await put('logs',{id:'l'+Date.now(),ts:new Date().toISOString(),user:u.name,role:u.role,action:'Password reset requested',ref:'',detail:m})}
   $('lerr').className='ok';$('lerr').textContent='If that email is registered, the admin has been notified and will give you a temporary password.'};
 $('pbtn').onclick=async()=>{const a=$('np').value,b=$('cp').value;$('perr').textContent='';
+  if(inviteExpired(me)){$('perr').textContent=EXP_MSG;return}
   if(a.length<6){$('perr').textContent='Use at least 6 characters.';return}if(a!==b){$('perr').textContent='Passwords do not match.';return}
   const h=await hash(a);if(h===me.hash){$('perr').textContent='Choose a password different from the temporary one.';return}
   me={...me,hash:h,mustChange:false,resetRequested:false,pwAt:new Date().toISOString()};await put('users',me);
@@ -350,6 +455,68 @@ $('agsave').onclick=async()=>{const o={id:agEdit||'a'+Date.now(),name:$('agn').v
 $('aglist').onclick=async e=>{const d=e.target.dataset,a=AG().find(x=>x.id===(d.ae||d.ad));if(!a)return;
   if(d.ae){agEdit=a.id;$('agn').value=a.name;$('age').value=a.email;$('aga').value=a.address;$('agt').value=a.tin}
   if(d.ad&&await ask('Delete agency '+a.name+'?')){await put('settings',{id:'agencies',list:AG().filter(x=>x.id!==a.id)});addLog('Agency deleted','',a.name);renderAG()}};
+let catEdit=null;const catItemTypes=TYPES.filter(t=>t!=='Hotel / Room');
+function catUI(){const room=$('catk').value==='room';$('cattw').hidden=room;$('catpw').hidden=room}
+function fillCat(){$('catp').innerHTML=PROPS.map(p=>`<option>${esc(p)}</option>`).join('');$('catt').innerHTML=catItemTypes.map(t=>`<option>${t}</option>`).join('');catUI();renderCat()}
+function renderCat(){const p=$('catp').value;$('catlist').innerHTML=CAT().filter(e=>e.property===p).sort((a,b)=>catType(a).localeCompare(catType(b))||a.name.localeCompare(b.name)).map(e=>`<tr><td>${e.kind==='room'?'Room':'Item / service'}</td><td>${esc(catType(e))}</td><td>${esc(e.name)}</td><td class="amt">${e.kind==='room'?'<span class="mute">Set by agent</span>':fmt(e.price)}</td><td><div class="acts"><button class="s" data-ce="${e.id}">Edit</button><button class="s d" data-cd="${e.id}">Delete</button></div></td></tr>`).join('')}
+$('catk').onchange=catUI;$('catp').onchange=renderCat;
+$('catsave').onclick=async()=>{const room=$('catk').value==='room',o={id:catEdit||'c'+Date.now(),property:$('catp').value,kind:$('catk').value,type:room?'Hotel / Room':$('catt').value,name:$('catn').value.trim(),price:room?0:parseFloat($('catpr').value)};
+  if(!o.name||(!room&&!(o.price>=0))){toast(room?'Enter the room name':'Enter the name and a standard price');return}
+  const l=CAT().filter(x=>x.id!==o.id);l.push(o);await put('settings',{id:'catalog',list:l});addLog(catEdit?'Catalog updated':'Catalog added',o.property,o.name);
+  catEdit=null;$('catn').value='';$('catpr').value='';$('catsave').textContent='Save';renderCat();updSug();toast('Saved')};
+$('catlist').onclick=async e=>{const d=e.target.dataset,c=CAT().find(x=>x.id===(d.ce||d.cd));if(!c)return;
+  if(d.ce){catEdit=c.id;$('catp').value=c.property;$('catk').value=c.kind;catUI();if(c.kind==='item')$('catt').value=c.type;$('catn').value=c.name;$('catpr').value=c.kind==='item'?c.price:'';$('catsave').textContent='Update'}
+  if(d.cd&&await ask('Delete '+c.name+'?')){await put('settings',{id:'catalog',list:CAT().filter(x=>x.id!==c.id)});addLog('Catalog deleted',c.property,c.name);renderCat();updSug()}};
+/* Excel export / import: one tab per property, columns Kind | Type | Name | Standard Price */
+$('catexp').onclick=async()=>{if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return}
+  const wb=XLSX.utils.book_new(),ins=[['H Hospitality Group – rooms, items & services template'],[],['How to use'],['1. Each tab is one property. Add one line per room or item / service. Do not rename the tabs.'],['2. Kind: Room or Item.'],['3. Type (items only): '+catItemTypes.join(', ')+'.'],['4. Standard Price (items only): fills in the unit price automatically. Leave blank for rooms, agents enter room rates.'],['5. Save the file, then press Import Excel on the admin page.'],[],['Example'],['Kind','Type','Name','Standard Price'],['Room','','Deluxe Room – per night',''],['Item','Breakfast','Breakfast for 2 – per day',1200]],w=XLSX.utils.aoa_to_sheet(ins);w['!cols']=[{wch:90}];XLSX.utils.book_append_sheet(wb,w,'Instructions');
+  PROPS.forEach(pr=>{const ws=XLSX.utils.aoa_to_sheet([['Kind','Type','Name','Standard Price'],...CAT().filter(e=>e.property===pr).map(e=>[e.kind==='room'?'Room':'Item',e.kind==='room'?'':e.type,e.name,e.kind==='room'?'':e.price])]);ws['!cols']=[{wch:10},{wch:18},{wch:46},{wch:16}];XLSX.utils.book_append_sheet(wb,ws,pr)});
+  const blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  try{const dl=await claude.use('downloads');if(!dl)throw{code:'unavailable'};await dl.save({filename:'HHG-rooms-items-template.xlsx',data:blob});addLog('Catalog exported','','Excel template')}
+  catch(e){if(!(e&&e.code==='declined'))toast('Export failed: '+((e&&(e.message||e.code))||'unavailable'))}};
+$('catimp').onclick=()=>$('catfile').click();
+$('catfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return}
+  try{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'}),found=[],skipped=[];let add=0,upd=0,bad=0,list=CAT().slice();
+    const key=x=>[x.property,x.kind,catType(x),x.name].join('|').toLowerCase();
+    wb.SheetNames.forEach(n=>{const pr=PROPS.find(x=>x.toLowerCase()===n.trim().toLowerCase());if(!pr){if(n!=='Instructions')skipped.push(n);return}
+      found.push(pr);if($('catrep').checked)list=list.filter(x=>x.property!==pr);
+      XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''}).slice(1).forEach(r=>{const name=String(r[2]||'').trim();if(!name)return;
+        const room=/^r/i.test(String(r[0]).trim()),type=room?'Hotel / Room':(catItemTypes.find(t=>t.toLowerCase()===String(r[1]).trim().toLowerCase())||'Other'),price=room?0:parseFloat(String(r[3]).replace(/,/g,''));
+        if(!room&&!(price>=0)){bad++;return}
+        const o={id:'c'+Date.now()+Math.random().toString(36).slice(2,7),property:pr,kind:room?'room':'item',type,name,price},i=list.findIndex(x=>key(x)===key(o));
+        if(i>=0){list[i]={...list[i],price};upd++}else{list.push(o);add++}})});
+    if(!found.length){toast('No property tabs found. Please use the exported template.');return}
+    await put('settings',{id:'catalog',list});addLog('Catalog imported','',`${f.name}: ${add} added, ${upd} updated`);renderCat();updSug();
+    toast(`Imported: ${add} added, ${upd} updated`+(bad?`, ${bad} skipped (no price)`:'')+(skipped.length?`. Ignored tabs: ${skipped.join(', ')}`:''))}
+  catch(err){toast('Import failed: '+(err.message||err))}};
+/* shared Excel helpers + property details / travel agency export & import */
+const cell=v=>String(v==null?'':v).trim();
+async function xlSave(sheets,fn,ins){if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return false}
+  const wb=XLSX.utils.book_new();if(ins){const w=XLSX.utils.aoa_to_sheet(ins.map(x=>[x]));w['!cols']=[{wch:90}];XLSX.utils.book_append_sheet(wb,w,'Instructions')}
+  sheets.forEach(([n,rows,cols])=>{const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=cols.map(wch=>({wch}));XLSX.utils.book_append_sheet(wb,ws,n)});
+  const blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  try{const dl=await claude.use('downloads');if(!dl)throw{code:'unavailable'};await dl.save({filename:fn,data:blob});return true}
+  catch(e){if(!(e&&e.code==='declined'))toast('Export failed: '+((e&&(e.message||e.code))||'unavailable'));return false}}
+async function xlRows(f,sheet){const wb=XLSX.read(await f.arrayBuffer(),{type:'array'}),n=wb.SheetNames.find(x=>x.trim().toLowerCase()===sheet.toLowerCase())||wb.SheetNames.find(x=>x!=='Instructions');return n?XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''}).slice(1):[]}
+$('pexp').onclick=async()=>{if(await xlSave([['Properties',[['Property','Address','Email','Contact number'],...ALLP.map(n=>{const i=propInfo[n]||{};return[n,i.address||'',i.email||'',i.phone||'']})],[28,50,30,20]]],'HHG-property-details.xlsx',['Property details shown in the PDF header.','One line per property. Do not change the property names.','Blank cells keep the current value when importing.','Save the file, then press Import Excel.']))addLog('Property details exported','','Excel')};
+$('pimp').onclick=()=>$('pfile').click();
+$('pfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return}
+  try{let n=0;const bad=[];(await xlRows(f,'Properties')).forEach(r=>{if(!cell(r[0]))return;const nm=ALLP.find(x=>x.toLowerCase()===cell(r[0]).toLowerCase());if(!nm){bad.push(cell(r[0]));return}
+      const o={...(propInfo[nm]||{})};[['address',1],['email',2],['phone',3]].forEach(([k,c])=>{if(cell(r[c]))o[k]=cell(r[c])});propInfo[nm]=o;n++});
+    if(!n){toast('No matching properties found. Please use the exported file.');return}
+    await put('settings',{id:'props',map:propInfo});addLog('Property details imported','',f.name+': '+n);fillPP();
+    toast(`Imported ${n} propert${n===1?'y':'ies'}`+(bad.length?`. Not recognised: ${bad.join(', ')}`:''))}
+  catch(err){toast('Import failed: '+(err.message||err))}};
+$('agexp').onclick=async()=>{if(await xlSave([['Agencies',[['Agency name','Email','Address','TIN'],...AG().map(a=>[a.name,a.email,a.address,a.tin])],[30,32,50,20]]],'HHG-travel-agencies.xlsx',['Travel agency billing details.','One line per agency. Agency name, a valid email, address and TIN are all required.','Importing adds new agencies and updates existing ones with the same name.','Save the file, then press Import Excel.']))addLog('Agencies exported','','Excel')};
+$('agimp').onclick=()=>$('agfile').click();
+$('agfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return}
+  try{let add=0,upd=0,bad=0;const l=AG().slice();(await xlRows(f,'Agencies')).forEach(r=>{const o={name:cell(r[0]),email:cell(r[1]),address:cell(r[2]),tin:cell(r[3])};if(!o.name&&!o.email&&!o.address&&!o.tin)return;
+      if(!o.name||!isMail(o.email)||!o.address||!o.tin){bad++;return}
+      const i=l.findIndex(x=>x.name.toLowerCase()===o.name.toLowerCase());if(i>=0){l[i]={...l[i],...o};upd++}else{l.push({id:'a'+Date.now()+Math.random().toString(36).slice(2,6),...o});add++}});
+    if(!add&&!upd){toast(bad?`No valid rows. ${bad} skipped (name, valid email, address and TIN are required)`:'No agencies found in the file');return}
+    l.sort((a,b)=>a.name.localeCompare(b.name));await put('settings',{id:'agencies',list:l});addLog('Agencies imported','',`${f.name}: ${add} added, ${upd} updated`);renderAG();
+    toast(`Imported: ${add} added, ${upd} updated`+(bad?`, ${bad} skipped (incomplete)`:''))}
+  catch(err){toast('Import failed: '+(err.message||err))}};
 function toggleType(){$('agwrap').hidden=$('btype').value!=='Travel agency';showBill()}
 function showBill(){const b=$('billto'),on=$('btype').value==='Travel agency',a=AG().find(x=>x.id===$('agency').value);b.hidden=!on;
   b.innerHTML=a?`<b>Bill to:</b> ${esc(a.name)}<br>${esc(a.address)}<br>${esc(a.email)} · TIN ${esc(a.tin)}`:'<span class="mute">Select an agency. The admin sets up agency details under Travel agencies.</span>';
@@ -357,41 +524,121 @@ function showBill(){const b=$('billto'),on=$('btype').value==='Travel agency',a=
 $('btype').onchange=toggleType;$('agency').onchange=showBill;$('email').oninput=()=>{$('email').dataset.auto=''};
 /* dashboard + view */
 const stOf=q=>q.payment==='Paid'?'paid':q.payment==='Failed'?'failed':(dayDiff(q.optionDate)<0?'overdue':'pending');
+const fm0=n=>'PHP '+Math.round(n||0).toLocaleString('en-PH');
 function renderDash(){const Q=D.quotations,c={paid:0,pending:0,failed:0,overdue:0};Q.forEach(q=>c[stOf(q)]++);
-  $('kpis').innerHTML=[['Quotes created',Q.length,'--brand'],['Pending',c.pending,'--sun'],['Successful (paid)',c.paid,'--ok'],['Failed',c.failed,'--bad'],['Overdue – follow up',c.overdue,'--over']].map(k=>`<div class="kpi" style="border-left-color:var(${k[2]})"><div class="n">${k[1]}</div><div class="mute">${k[0]}</div></div>`).join('');
+  const quoted=Q.reduce((s,q)=>s+(q.total||0),0),won=Q.filter(q=>q.payment==='Paid').reduce((s,q)=>s+(q.total||0),0),rate=Q.length?Math.round(c.paid/Q.length*100):0;
+  $('revs').innerHTML=`<div class="kpi" style="--c:var(--brand)"><div class="l">Revenue quoted</div><div class="n">${fm0(quoted)}</div><small>${Q.length} quotation${Q.length===1?'':'s'} made</small></div>
+  <div class="kpi" style="--c:var(--ok)"><div class="l">Revenue won (paid)</div><div class="n">${fm0(won)}</div><small>${c.paid} successful · ${rate}% win rate</small></div>`;
+  $('kpis').innerHTML=[['Quotes created',Q.length,'--brand'],['Pending',c.pending,'--sun'],['Successful (paid)',c.paid,'--ok'],['Failed',c.failed,'--bad'],['Overdue – follow up',c.overdue,'--over'],['Awaiting confirmation',Q.filter(q=>q.payment==='Paid'&&!q.confAt).length,'--sun']].map(k=>`<div class="kpi" style="--c:var(${k[2]})"><div class="n">${k[1]}</div><div class="l">${k[0]}</div></div>`).join('');
   const per=ALLP.map(p=>{const o={paid:0,pending:0,failed:0,overdue:0,t:0};Q.filter(q=>q.property===p).forEach(q=>{o[stOf(q)]++;o.t++});return[p,o]}),mx=Math.max(1,...per.map(x=>x[1].t));
-  $('chart').innerHTML=per.map(([p,o])=>`<div class="brow"><span class="bl">${esc(p)}</span><div class="bt">${['paid','pending','overdue','failed'].map(k=>o[k]?`<i class="s_${k}" style="width:${o[k]/mx*100}%" title="${k}: ${o[k]}"></i>`:'').join('')}</div><b>${o.t}</b></div>`).join('')}
+  $('chart').innerHTML=`<div class="cols">${per.map(([p,o])=>`<div class="col"><div class="plot"><b${o.t?'':' class="mute"'}>${o.t}</b>${o.t?`<div class="stack" style="height:${o.t/mx*82}%">${['failed','overdue','pending','paid'].map(k=>o[k]?`<i class="s_${k}" style="flex:${o[k]}" title="${k}: ${o[k]}"></i>`:'').join('')}</div>`:''}</div><div class="cl">${esc(p)}</div></div>`).join('')}</div>`}
 function viewQ(q){const[d]=dueInfo(q),[p]=payInfo(q);
-  openModal(`<h2>${q.ref} · ${esc(q.property)}</h2><p>${esc(q.btype||'Walk-in guest')}${q.agencyName?' · Bill to '+esc(q.agencyName)+' · TIN '+esc(q.agencyTin)+' · '+esc(q.agencyEmail)+' · '+esc(q.agencyAddress):''}<br>Guest: ${esc(q.client)} · ${esc(q.email||'-')}<br>Check in: ${longD(q.checkin)} · Check out: ${longD(q.checkout)}<br>Prepared by ${esc(q.agent||'-')} · Source: ${esc(q.source||'-')} · Option date: ${longD(q.optionDate)}<br>Status: ${d} · Email: ${q.emailStatus} · Payment: ${p}</p>
+  openModal(`<h2>${q.ref} · ${esc(q.property)}</h2><p>${esc(BT(q.btype))}${q.agencyName?' · Bill to '+esc(q.agencyName)+' · TIN '+esc(q.agencyTin)+' · '+esc(q.agencyEmail)+' · '+esc(q.agencyAddress):''}<br>Guest: ${esc(q.client)} · ${esc(q.email||'-')}<br>Check in: ${longD(q.checkin)} · Check out: ${longD(q.checkout)}<br>Prepared by ${esc(q.agent||'-')} · Source: ${esc(q.source||'-')} · Option date: ${longD(q.optionDate)}<br>Status: ${d} · Email: ${q.emailStatus} · Payment: ${p}</p>
   <div class="scroll"><table style="min-width:560px"><thead><tr><th>Type</th><th>Description</th><th>Qty</th><th>Rate</th><th>Disc. rate</th><th style="text-align:right">Net</th></tr></thead><tbody>${q.items.map(r=>`<tr><td>${esc(r.type)}</td><td>${esc(r.desc)}</td><td>${r.qty}</td><td>${fmt(r.price)}</td><td>${r.disc?fmt(r.drate):'-'}</td><td class="amt">${fmt(eff(r))}</td></tr>`).join('')}</tbody></table></div>
   <div class="total"><span>Total</span><span>${fmt(q.total)}</span></div><h3>Inclusions</h3><pre>${esc(q.inclusions)}</pre><h3>Terms &amp; conditions</h3><pre>${esc(q.terms)}</pre><h3>Hotel policies</h3><pre>${esc(q.policies)}</pre>`)}
 /* property details, defaults */
 $('pp').innerHTML=ALLP.map(p=>`<option>${p}</option>`).join('');
-const fillPP=()=>{const i=pinfo($('pp').value);$('pa').value=i.address;$('pe').value=i.email;$('pt').value=i.phone};$('pp').onchange=fillPP;
+const fillPP=()=>{const i=pinfo($('pp').value);$('pa').value=i.address;$('pe').value=i.email;$('pt').value=i.phone;showLogo()};$('pp').onchange=fillPP;
 $('psave').onclick=async()=>{propInfo[$('pp').value]={address:$('pa').value,email:$('pe').value,phone:$('pt').value};await put('settings',{id:'props',map:propInfo});addLog('Property details updated','',$('pp').value);toast('Saved')};
-$('savedef').onclick=async()=>{DEF={terms:$('terms').value,pol:$('pol').value};await put('settings',{id:'terms',terms:DEF.terms,pol:DEF.pol});addLog('Default terms & policies updated','','');toast('Saved as default for all agents')};
-function applySettings(){const t=D.settings.find(x=>x.id==='terms'),p=D.settings.find(x=>x.id==='props');if(t)DEF={terms:t.terms,pol:t.pol};propInfo=(p&&p.map)||{};renderAG();
-  if(!editId&&!$('client').value){$('terms').value=DEF.terms;$('pol').value=DEF.pol}}
-function start(){$('login').hidden=true;$('app').hidden=false;$('who').hidden=false;$('whoname').textContent=`${me.name} · ${me.role}`;
-  const a=me.role==='admin';document.querySelectorAll('.adm').forEach(e=>e.hidden=!a);$('terms').readOnly=$('pol').readOnly=!a;$('agent').readOnly=true;
-  if(a&&!logsOn){logsOn=true;watch('logs',renderLogs)}if(a){renderUsers();fillPP()}resetForm();renderList()}
+function applySettings(){const t=D.settings.find(x=>x.id==='terms'),p=D.settings.find(x=>x.id==='props');if(t)DEF={terms:t.terms,pol:t.pol};propInfo=(p&&p.map)||{};renderAG();renderCat();updSug();showLogo();
+  if(!editId&&!$('client').value){$('terms').value=DEF.terms;applyPropText()}}
+function start(){$('login').hidden=true;$('app').hidden=false;$('who').hidden=false;showWho();applyTheme(me.theme);renderSettings();$('chatw').hidden=false;$('chatp').hidden=true;renderChat();
+  const a=me.role==='admin';document.body.classList.toggle('isadmin',a);$('nav').hidden=false;$('menubtn').hidden=false;go('dash');document.querySelectorAll('.adm').forEach(e=>e.hidden=!a);$('terms').readOnly=$('pol').readOnly=!a;$('agent').readOnly=true;
+  if(a&&!logsOn){logsOn=true;watch('logs',renderLogs)}if(a){renderUsers();fillPP();fillCat();fillTP()}resetForm();renderList()}
 $('lbtn').onclick=async()=>{const u=$('lu').value.trim().toLowerCase(),p=$('lp').value;$('lerr').className='bad';$('lerr').textContent='';
   let usr=D.users.find(x=>x.username===u);
   if(!usr&&u==='admin'&&!D.users.some(x=>x.role==='admin')){usr={id:'u_admin',username:'admin',name:'Administrator',role:'admin',email:'',mustChange:true,hash:await hash('admin123')};await put('users',usr)}
   if(!usr||usr.hash!==await hash(p)){$('lerr').textContent='Wrong username or password.';return}
+  if(inviteExpired(usr)){$('lerr').textContent=EXP_MSG;return}
   if(usr.active===false){$('lerr').textContent='This account is deactivated. Please contact your administrator.';return}
   me=usr;try{sessionStorage.setItem('hhg_me',usr.id)}catch(e){}
   $('login').hidden=true;if(me.mustChange)$('pw').hidden=false;else{start();addLog('Signed in','','')}};
 $('lp').onkeydown=e=>{if(e.key==='Enter')$('lbtn').click()};
-$('logout').onclick=()=>{addLog('Signed out','','');me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('who').hidden=true;$('login').hidden=false;$('lp').value=''};
+$('logout').onclick=()=>{addLog('Signed out','','');me=null;try{sessionStorage.removeItem('hhg_me')}catch(e){}$('app').hidden=true;$('nav').hidden=true;$('menubtn').hidden=true;applyTheme(null);$('chatw').hidden=true;document.body.classList.remove('isadmin');$('who').hidden=true;$('login').hidden=false;$('lp').value=''};
+
+/* responsive tables: copy header text to cells so they stack as cards on small screens */
+const lab=t=>{const h=[...t.tHead.rows[0].cells].map(c=>c.textContent.trim());[...t.tBodies[0].rows].forEach(r=>[...r.cells].forEach((c,i)=>{if(c.dataset.l!==h[i])c.dataset.l=h[i]||''}))};
+document.querySelectorAll('table.rt').forEach(t=>{new MutationObserver(()=>lab(t)).observe(t.tBodies[0],{childList:true});lab(t)});
+
+/* property logos: one settings doc per property (logo_<index>) */
+const LID=p=>'logo_'+ALLP.indexOf(p),logoOwn=p=>{const d=D.settings.find(x=>x.id===LID(p));return d&&d.data?d:null},logoFor=p=>logoOwn(p)||logoOwn(GRP);
+function showLogo(){const d=logoOwn($('pp').value);$('plogo').innerHTML=d?`<img src="${d.data}" alt="" style="max-width:100%;max-height:100%">`:'<span class="mute" style="font-size:12px">No logo</span>'}
+function headLogo(){const d=logoFor($('prop').value),i=$('hlogo');if(d){i.src=d.data;i.hidden=false}else i.hidden=true}
+$('plbtn').onclick=()=>$('plfile').click();
+$('plfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const url=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)}),
+    im=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>im0(i,res,rej);i.onerror=rej;i.src=url});
+    const k=Math.min(1,360/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k)),c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(im,0,0,w,h);
+    let data=c.toDataURL('image/png');if(data.length>180000){x.globalCompositeOperation='destination-over';x.fillStyle='#fff';x.fillRect(0,0,w,h);data=c.toDataURL('image/jpeg',.82)}
+    await put('settings',{id:LID($('pp').value),data,w,h});addLog('Property logo updated','',$('pp').value);showLogo();headLogo();toast('Logo saved')}
+  catch(err){toast('Could not read that image. Please use a PNG or JPG.')}};
+const im0=(i,res,rej)=>i.width&&i.height?res(i):rej();
+$('pldel').onclick=async()=>{const d=logoOwn($('pp').value);if(!d){toast('No logo to remove');return}
+  if(await ask('Remove the logo for '+$('pp').value+'?')){await rm('settings',d.id);addLog('Property logo removed','',$('pp').value);showLogo();headLogo()}};
+
+/* settings: profile icon, theme, password */
+const THEMES=[['pink','Pink','#d9468f'],['purple','Purple','#7c4dcc'],['blue','Blue','#2f6fdb'],['black','Black','#22262c'],['green','Green','#14625e'],['yellow','Yellow','#d9a400'],['red','Red','#d64545'],['grey','Grey','#6b7280']],
+  AVS=['🐱','🐶','🐰','🦊','🐼','🐨','🦁','🐸','🐵','🐧','🦄','🐹','🐻','🐥','🐙'];
+function applyTheme(k){const r=document.documentElement.style,t=THEMES.find(x=>x[0]===k);if(!t){r.removeProperty('--brand');r.removeProperty('--brand-ink');return}
+  const dark=matchMedia('(prefers-color-scheme:dark)').matches&&document.documentElement.dataset.theme!=='light';let c=t[2],ink='#fff';if(k==='black'&&dark){c='#e6e8eb';ink='#111'}if(k==='yellow')ink='#2b1f00';r.setProperty('--brand',c);r.setProperty('--brand-ink',ink)}
+const showWho=()=>{$('whoname').textContent=`${me.avatar||'🙂'} ${me.name} · ${me.role}`};
+function renderSettings(){$('avgrid').innerHTML=AVS.map(a=>`<button class="avb${(me.avatar||'')===a?' on':''}" data-av="${a}" aria-label="Choose icon ${a}">${a}</button>`).join('');
+  $('thgrid').innerHTML=THEMES.map(t=>`<button class="thb${(me.theme||'green')===t[0]?' on':''}" data-th="${t[0]}" style="--c:${t[2]}"><i></i>${t[1]}</button>`).join('')}
+async function saveProf(patch){const u={...(D.users.find(x=>x.id===me.id)||me),...patch};await put('users',u);me=u;showWho();renderSettings()}
+$('avgrid').onclick=e=>{const b=e.target.closest('[data-av]');if(b)saveProf({avatar:b.dataset.av})};
+$('thgrid').onclick=e=>{const b=e.target.closest('[data-th]');if(b){applyTheme(b.dataset.th);saveProf({theme:b.dataset.th})}};
+$('spw').onclick=async()=>{const m=$('spm'),say=(t,ok)=>{m.textContent=t;m.className=ok?'ok':'bad'},c=$('spc').value,a=$('spn').value,b=$('spr').value;
+  if(await hash(c)!==me.hash){say('Your current password is incorrect.');return}if(a.length<6){say('Use at least 6 characters.');return}if(a!==b){say('The new passwords do not match.');return}if(await hash(a)===me.hash){say('Choose a password different from the current one.');return}
+  await saveProf({hash:await hash(a),mustChange:false,pwAt:new Date().toISOString()});addLog('Password changed','',me.username);$('spc').value=$('spn').value=$('spr').value='';say('Password updated.',true)};
+/* team chat */
+const CK=()=>'hhg_chat_'+(me?me.id:''),chatSeen=()=>{try{return localStorage.getItem(CK())||''}catch(e){return''}},chatMsgs=()=>[...D.chat].sort((a,b)=>a.ts.localeCompare(b.ts)).slice(-150);
+function badge(){if(!me)return;const s=chatSeen(),n=$('chatp').hidden?D.chat.filter(m=>m.uid!==me.id&&m.ts>s).length:0;$('chatbadge').hidden=!n;$('chatbadge').textContent=n>9?'9+':n}
+function markSeen(){const L=chatMsgs();if(L.length)try{localStorage.setItem(CK(),L[L.length-1].ts)}catch(e){}badge()}
+function renderChat(){if(!me||$('chatw').hidden)return;const L=chatMsgs();
+  $('chatl').innerHTML=L.length?L.map(m=>`<div class="msg${m.uid===me.id?' me':''}"><div class="av">${esc(m.av||'🙂')}</div><div class="bb"><div class="nm">${esc(m.name)} · ${new Date(m.ts).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div>${m.ref?`<span class="chip">📎 ${esc(m.ref)}</span><br>`:''}<div class="tx">${esc(m.text||'')}</div></div></div>`).join(''):'<p class="mute" style="margin:auto;text-align:center">No messages yet. Use this chat for team endorsements and notes.</p>';
+  if(!$('chatp').hidden){$('chatl').scrollTop=1e9;markSeen()}else badge()}
+function fillChatQ(){const v=$('chatq').value;$('chatq').innerHTML='<option value="">Attach a quotation (optional)</option>'+D.quotations.slice(0,60).map(q=>`<option>${esc(q.ref)} – ${esc(q.client)}</option>`).join('');$('chatq').value=v}
+$('chatfab').onclick=()=>{const op=$('chatp').hidden;$('chatp').hidden=!op;if(op){fillChatQ();renderChat();markSeen();$('chatin').focus()}else badge()};
+$('chatx').onclick=()=>{$('chatp').hidden=true;badge()};
+$('chatsend').onclick=async()=>{const t=$('chatin').value.trim(),ref=$('chatq').value;if(!t&&!ref)return;$('chatin').value='';$('chatq').value='';
+  await put('chat',{id:'m'+Date.now()+Math.random().toString(36).slice(2,5),ts:new Date().toISOString(),uid:me.id,name:me.name,av:me.avatar||'🙂',text:t,ref});renderChat()};
+$('chatin').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('chatsend').click()}};
+/* booking confirmation monitoring */
+const bcSt=q=>!q.confAt?['wait','Awaiting confirmation','warn']:!q.hotelConf?['nohotel','Hotel no. missing','warn']:['done','Confirmed','ok'];
+function renderBC(){const P=D.quotations.filter(q=>q.payment==='Paid'),c={wait:0,nohotel:0,done:0};P.forEach(q=>c[bcSt(q)[0]]++);
+  $('bckpi').innerHTML=[['Paid quotations',P.length,'--brand'],['Awaiting confirmation',c.wait,'--sun'],['Hotel no. missing',c.nohotel,'--over'],['Confirmed',c.done,'--ok']].map(k=>`<div class="kpi" style="--c:var(${k[2]})"><div class="n">${k[1]}</div><div class="l">${k[0]}</div></div>`).join('');
+  const f=$('bcf').value,ord={wait:0,nohotel:1,done:2},L=P.filter(q=>f==='all'||bcSt(q)[0]===f).sort((a,b)=>ord[bcSt(a)[0]]-ord[bcSt(b)[0]]||String(a.checkin).localeCompare(String(b.checkin)));
+  $('bcempty').style.display=L.length?'none':'block';
+  $('bclist').innerHTML=L.map(q=>{const[k,t,tc]=bcSt(q),dd=q.checkin?dayDiff(q.checkin):null,ds=dd===null?'':dd===0?'today':dd>0?`in ${dd} day${dd>1?'s':''}`:'past';
+    return`<tr><td><b>${q.ref}</b><br><span class="mute">${esc(q.property)}</span></td><td>${esc(q.client)}</td><td>${q.checkin?longD(q.checkin):'-'}<br><span class="mute">${ds}</span></td><td class="amt">${fmt(q.total)}</td><td><span class="tag ${tc}">${t}</span></td><td>${esc(q.hotelConf||'-')}</td><td>${q.confAt?new Date(q.confAt).toLocaleDateString('en-PH',{dateStyle:'medium'})+(q.confBy?'<br><span class="mute">'+esc(q.confBy)+'</span>':''):'-'}</td><td><div class="acts"><button class="s p" data-a="cf" data-id="${q.id}">${q.confAt?'Update':'Issue'}</button>${q.confAt?`<button class="s" data-a="cp" data-id="${q.id}">PDF</button>`:''}</div></td></tr>`}).join('')}
+$('bcf').onchange=renderBC;
+$('bclist').onclick=e=>{const b=e.target.closest('button');if(!b)return;const q=D.quotations.find(x=>x.id===b.dataset.id);if(!q)return;if(b.dataset.a==='cf')confModal(q);if(b.dataset.a==='cp'){makePdf(q,true);addLog('Confirmation PDF downloaded',q.ref,q.client)}};
+/* pages */
+function go(pg){if(!me||(me.role!=='admin'&&pg!=='dash'&&pg!=='new'&&pg!=='bc'&&pg!=='settings'))pg='dash';document.querySelectorAll('[data-pg]').forEach(e=>e.classList.toggle('pgoff',e.dataset.pg!==pg));document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.go===pg));scrollTo({top:0});document.body.classList.remove('navopen')}
+$('menubtn').onclick=()=>document.body.classList.toggle(innerWidth<=900?'navopen':'navoff');$('navbk').onclick=()=>document.body.classList.remove('navopen');
+document.querySelectorAll('.nb').forEach(b=>b.onclick=()=>go(b.dataset.go));
+/* amenities / terms / policies per property */
+function tpLoad(){const m=PTX()[$('tp').value]||{};$('tpi').value=m.inc||INC;$('tpt').value=m.terms||DEF.terms;$('tpp').value=m.pol||DEF.pol}
+function fillTP(){$('tp').innerHTML=ALLP.map(p=>`<option>${esc(p)}</option>`).join('');tpLoad()}
+$('tp').onchange=tpLoad;
+$('tpsave').onclick=async()=>{const m={...PTX()},pr=$('tp').value;m[pr]={inc:$('tpi').value,terms:$('tpt').value,pol:$('tpp').value};await put('settings',{id:'proptext',map:m});addLog('Inclusions, terms & policies updated',pr,'');toast('Saved for '+pr)};
+$('tpexp').onclick=async()=>{if(await xlSave([['Inclusions & policies',[['Property','Amenities / inclusions','Terms & conditions','Hotel policies'],...ALLP.map(n=>{const m=PTX()[n]||{};return[n,m.inc||INC,m.terms||DEF.terms,m.pol||DEF.pol]})],[28,60,60,60]]],'HHG-inclusions-terms-policies.xlsx',['Amenities / inclusions, terms & conditions and hotel policies per property.','One line per property. Do not change the property names.','Edit the text in each cell (use Alt+Enter for a new line). Blank cells keep the current text when importing.','Save the file, then press Import Excel.']))addLog('Inclusions, terms & policies exported','','Excel')};
+$('tpimp').onclick=()=>$('tpfile').click();
+$('tpfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return}
+  try{let n=0;const bad=[],m={...PTX()};(await xlRows(f,'Inclusions & policies')).forEach(r=>{if(!cell(r[0]))return;const nm=ALLP.find(x=>x.toLowerCase()===cell(r[0]).toLowerCase());if(!nm){bad.push(cell(r[0]));return}
+      const o={...(m[nm]||{})};[['inc',1],['terms',2],['pol',3]].forEach(([k,c])=>{if(cell(r[c]))o[k]=String(r[c]).trim()});m[nm]=o;n++});
+    if(!n){toast('No matching properties found. Please use the exported file.');return}
+    await put('settings',{id:'proptext',map:m});addLog('Inclusions, terms & policies imported','',f.name+': '+n);tpLoad();
+    toast(`Imported ${n} propert${n===1?'y':'ies'}`+(bad.length?`. Not recognised: ${bad.join(', ')}`:''))}
+  catch(err){toast('Import failed: '+(err.message||err))}};
 
 /* ---------- boot ---------- */
 resetForm();
 (async()=>{try{const c=await claude.use('db');if(c)db=c}catch(e){}
-  await Promise.all([watch('users',()=>{renderUsers();enforce()}),watch('settings',applySettings),watch('quotations',renderList)]);
+  await Promise.all([watch('users',()=>{renderUsers();enforce()}),watch('settings',applySettings),watch('quotations',renderList),watch('chat',renderChat)]);
   $('lbtn').disabled=false;
   try{const id=sessionStorage.getItem('hhg_me'),u=D.users.find(x=>x.id===id);if(u&&u.active!==false){me=u;if(u.mustChange){$('login').hidden=true;$('pw').hidden=false}else start()}}catch(e){}})();
-setInterval(renderList,60000);
+setInterval(()=>{renderList();renderUsers()},60000);
 </script>
 </body>
 </html>
