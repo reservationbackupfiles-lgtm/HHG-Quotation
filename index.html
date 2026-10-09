@@ -475,8 +475,16 @@ $('catexp').onclick=async()=>{if(!window.XLSX){toast('Excel library not loaded y
   const wb=XLSX.utils.book_new(),ins=[['H Hospitality Group – rooms, items & services template'],[],['How to use'],['1. Each tab is one property. Add one line per room or item / service. Do not rename the tabs.'],['2. Kind: Room or Item.'],['3. Type (items only): '+catItemTypes.join(', ')+'.'],['4. Standard Price (items only): fills in the unit price automatically. Leave blank for rooms, agents enter room rates.'],['5. Save the file, then press Import Excel on the admin page.'],[],['Example'],['Kind','Type','Name','Standard Price'],['Room','','Deluxe Room – per night',''],['Item','Breakfast','Breakfast for 2 – per day',1200]],w=XLSX.utils.aoa_to_sheet(ins);w['!cols']=[{wch:90}];XLSX.utils.book_append_sheet(wb,w,'Instructions');
   PROPS.forEach(pr=>{const ws=XLSX.utils.aoa_to_sheet([['Kind','Type','Name','Standard Price'],...CAT().filter(e=>e.property===pr).map(e=>[e.kind==='room'?'Room':'Item',e.kind==='room'?'':e.type,e.name,e.kind==='room'?'':e.price])]);ws['!cols']=[{wch:10},{wch:18},{wch:46},{wch:16}];XLSX.utils.book_append_sheet(wb,ws,pr)});
   const blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  try{const dl=await claude.use('downloads');if(!dl)throw{code:'unavailable'};await dl.save({filename:'HHG-rooms-items-template.xlsx',data:blob});addLog('Catalog exported','','Excel template')}
-  catch(e){if(!(e&&e.code==='declined'))toast('Export failed: '+((e&&(e.message||e.code))||'unavailable'))}};
+  
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;
+  a.download='HHG-rooms-items-template.xlsx';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  addLog('Catalog exported','','Excel template');
+};
 $('catimp').onclick=()=>$('catfile').click();
 $('catfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;if(!window.XLSX){toast('Excel library not loaded yet. Try again.');return}
   try{const wb=XLSX.read(await f.arrayBuffer(),{type:'array'}),found=[],skipped=[];let add=0,upd=0,bad=0,list=CAT().slice();
